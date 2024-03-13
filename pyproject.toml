@@ -1,0 +1,26 @@
+[project]
+name = "steamer"
+version = "0.1.0"
+description = "a single cell analysis pipeline"
+authors = [
+    {name = "Andrew Robbins", email = "andrew@robbinsa.me"},
+]
+dependencies = [
+    "scanpy>=1.9.8",
+    "pybedtools>=0.9.1",
+    "fuc>=0.37.0",
+    "setuptools>=69.1.1",
+]
+requires-python = ">=3.12"
+readme = "README.md"
+license = {text = "MIT"}
+[project.scripts]
+run_steamer = "steamer.run_steamer:main"
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
