@@ -115,7 +115,7 @@ def create_bed_for_fragments(filename, quality_barcode_file=""):
         frag_bf_sort = frag_bf.sort()
         frag_bf_sort.to_file("Frag.bed")
 
-    return quality_barcodes, frag_bf_sort
+    return frag_bf_sort
 
 
 def intersection(TE_bed, frag_bed):
