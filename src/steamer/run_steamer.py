@@ -5,13 +5,17 @@ import os
 import time
 from collections import defaultdict
 
+import typer
+
 import pandas as pd
 from fuc import pybed
 from pybedtools import BedTool
 from scipy.io import mmwrite
 from scipy.sparse import coo_matrix, csr_matrix
 
+app = typer.Typer()
 
+@app.command()
 def create_bed_for_TEs(filename):
     """
     Takes in a file (ideally a file containing TEs) and converts it into a BED file.
@@ -65,7 +69,7 @@ def create_bed_for_TEs(filename):
     TE_bf_sort.to_file("TEs.bed")
     return TE_bf_sort
 
-
+@app.command()
 def create_bed_for_fragments(filename, quality_barcode_file=""):
     """
     Takes in a file (ideally a fragment file) and converts it into a BED file.

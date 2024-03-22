@@ -11,12 +11,13 @@ dependencies = [
     "pybedtools>=0.9.1",
     "fuc>=0.37.0",
     "setuptools>=69.1.1",
+    "typer>=0.9.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
 license = {text = "MIT"}
 [project.scripts]
-run_steamer = "steamer.run_steamer:main"
+run_steamer = "steamer.run_steamer:app"
 
 [build-system]
 requires = ["pdm-backend"]
