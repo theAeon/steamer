@@ -6,6 +6,7 @@ import time
 from collections import defaultdict
 
 import typer
+from typing_extensions import Annotated
 
 import pandas as pd
 from fuc import pybed
@@ -70,7 +71,7 @@ def create_bed_for_TEs(filename):
     return TE_bf_sort
 
 @app.command()
-def create_bed_for_fragments(filename, quality_barcode_file=""):
+def create_bed_for_fragments(filename, quality_barcode_file: Annotated[str, typer.Argument()] = ""):
     """
     Takes in a file (ideally a fragment file) and converts it into a BED file.
 
