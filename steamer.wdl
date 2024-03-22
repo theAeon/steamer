@@ -16,6 +16,11 @@ workflow steamer {
         Frags = in_Frags,
         QCbar = in_QCbar
     }
+    call intersect_bedfiles {
+      input:
+        Frags = make_bedfiles.outFrags,
+        TEs = make_bedfiles.outTEs
+    }
 }
 
 task make_bedfiles {
@@ -28,10 +33,23 @@ task make_bedfiles {
       run_steamer create-bed-for-fragments ~{Frags} ~{QCbar} && run_steamer create-bed-for-tes ~{TEs}
     >>>
     output {
-      File outFrag = "Frag.bed"
+      File outFrags = "Frag.bed"
       File outTEs = "TEs.bed"
     }
   runtime {
     docker: "ghcr.io/welch-lab/steamer:latest"
+  }
+}
+
+task intersect_bedfiles {
+  input {
+    File Frags
+    File TEs
+  }
+  command <<<
+    bedtools intersect -a ~{TEs} -b ~{Frags} -wb -sorted > bed_intersect.bed
+  >>>
+  output {
+    File intersected = "bed_intersect.bed"
   }
 }
