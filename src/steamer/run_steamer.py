@@ -5,6 +5,7 @@ import os
 import time
 from collections import defaultdict
 
+from pathlib import Path, PurePath
 import typer
 from typing_extensions import Annotated
 
@@ -17,12 +18,12 @@ from scipy.sparse import coo_matrix, csr_matrix
 app = typer.Typer()
 
 @app.command()
-def create_bed_for_TEs(filename):
+def create_bed_for_TEs(filename: Path):
     """
     Takes in a file (ideally a file containing TEs) and converts it into a BED file.
 
     Args:
-        filename: str, filepath to the input file (ideally .rph.hits)
+        filename: Path, filepath to the input file (ideally .rph.hits)
 
     Returns:
         bf: pybed.BedFrame object (and creating the TE bed file)
@@ -32,7 +33,8 @@ def create_bed_for_TEs(filename):
     col_names = ["seq_name", "ali-st", "ali-en"]
     other_col = ["family_name", "strand"]
     # only taking the columns with the col_names specified
-    if ".gz" in filename:
+    filename_str = filename.as_posix()
+    if ".gz" in filename_str:
         TE_df = pd.read_csv(
             filename,
             sep="\t",
@@ -71,7 +73,7 @@ def create_bed_for_TEs(filename):
     return TE_bf_sort
 
 @app.command()
-def create_bed_for_fragments(filename, quality_barcode_file: Annotated[str, typer.Argument()] = ""):
+def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Path | None, typer.Argument()] = None):
     """
     Takes in a file (ideally a fragment file) and converts it into a BED file.
 
@@ -84,7 +86,8 @@ def create_bed_for_fragments(filename, quality_barcode_file: Annotated[str, type
     """
 
     col_names = ["Chromosome", "Start", "End", "barcode"]
-    if ".gz" in filename:
+    filename_str = filename.as_posix()
+    if ".gz" in filename_str:
         frag_df = pd.read_csv(
             filename,
             sep="\t",
@@ -101,7 +104,7 @@ def create_bed_for_fragments(filename, quality_barcode_file: Annotated[str, type
     valid_chromosomes = ["chr" + str(i) for i in range(1, 19)] + ["chrX", "chrY"]
     # drop any non valid chromosomes
     frag_df = frag_df[frag_df["Chromosome"].isin(valid_chromosomes)]
-    if quality_barcode_file == "":
+    if quality_barcode_file is None:
         frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
         frag_bf_sort = frag_bf.sort()
         frag_bf_sort.to_file("Frag.bed")
@@ -248,7 +251,7 @@ def compress_tsv_file(file_path, output_dir, barcode):
     Takes in a file_path,out_dir, and the barcodes to make a .gzip .tsv file
     """
     # Create the output file path
-    output_file_path = os.path.join(output_dir, f"{os.path.basename(file_path)}.gz")
+    output_file_path = PurePath.joinpath(output_dir, f"{file_path.name}.gz")
     # Write the TSV file
     with open(file_path, "w", newline="") as tsv_file:
         writer = csv.writer(tsv_file, delimiter="\t")
@@ -299,27 +302,12 @@ def display_elapsed_time(start_time, p=True):
     elif p == False:
         return f"Elapsed time: {hours} hours, {minutes} minutes, {seconds} seconds"
 
-
-def main():
-    start_time = time.time()
-    print("Starting analysis")
-
-    TE_bed = create_bed_for_TEs("mm10.nrph.hits")
-    barcodes, frags = create_bed_for_fragments(
-        "e18_mouse_brain_fresh_5k_atac_fragments.tsv",
-        "filtered_feature_bc_matrix/barcodes.tsv.gz",
+@app.command()
+def run_analysis(bed_intersect: Path, cell_barcodes: Path, sample_name: str):
+    barcodes_df = pd.read_csv(
+        cell_barcodes, sep="\t", names=["barcode"]
     )
-
-    # Calculate the elapsed time
-    elapsed_time = time.time() - start_time
-    # Print the elapsed time
-    print("Starting analysis", display_elapsed_time(start_time, p=False))
-    print("bed files created")
-
-    TEs = BedTool("TEs.bed")
-    frags = BedTool("Frag.bed")
-    bed_intersect = intersection(TEs, frags)
-    bed_intersect.saveas("bed_intersect.bed")
+    barcodes = barcodes_df["barcode"].tolist()
     (
         unique_TEs_sparse_matrix,
         TE_Fams_sparse_matrix,
@@ -327,41 +315,40 @@ def main():
         TEs_fams,
         barcode_dict,
     ) = make_cell_x_element_matrix(bed_intersect, barcodes)
-
     unique_TEs_sparse_matrix = convert_df_to_sparse(unique_TEs_sparse_matrix)
     TE_Fams_sparse_matrix = convert_df_to_sparse(TE_Fams_sparse_matrix)
-    print("Matrix(s) created", display_elapsed_time(start_time, p=False))
+    print("Matrix(s) created",
+    #    display_elapsed_time(start_time, p=False)
+          )
     # make the output directory
-    output_dir = "TE_Fam_matrix_Mar082024/"
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir_fam = "TE_Fam_matrix_" + sample_name + "/"
+    os.makedirs(output_dir_fam, exist_ok=True)
     # start saving barcode info
-    file_path = "barcodes.tsv"
-    compress_tsv_file(file_path, output_dir, barcode_dict)
+    compress_tsv_file(cell_barcodes, output_dir_fam, barcode_dict)
     # starting saving the features
-    df = make_features_df(TEs_fams)
-    path = "TE_Fam_matrix_Mar082024/features.tsv.gz"
-    save_df_as_gz(df, path)
+    fam_df = make_features_df(TEs_fams)
+    fam_path = output_dir_fam + "features.tsv.gz"
+    save_df_as_gz(fam_df, fam_path)
     # start saving the matrix
-    file_path = "TE_Fam_matrix_Mar082024/matrix.mtx"
-    compress_sparse_matrix(TE_Fams_sparse_matrix, file_path)
+    fam_mtx_path = output_dir_fam + "matrix.mtx"
+    compress_sparse_matrix(TE_Fams_sparse_matrix, fam_mtx_path)
     print("Files saved to TE_Fams_matrix directory")
     # start on the unique TE info
-    output_dir = "TE_Unique_matrix_Mar082024/"
-    os.makedirs(output_dir, exist_ok=True)
+    output_dir_unique = "TE_Unique_matrix_" + sample_name + "/"
+    os.makedirs(output_dir_unique, exist_ok=True)
     # start saving barcode info
-    file_path = "barcodes.tsv"
-    compress_tsv_file(file_path, output_dir, barcode_dict)
+    compress_tsv_file(cell_barcodes, output_dir_unique, barcode_dict)
     # start saving the features
-    df = make_features_df(unique_TEs_list)
-    path = "TE_Unique_matrix_Mar082024/features.tsv.gz"
-    save_df_as_gz(df, path)
+    unique_df = make_features_df(unique_TEs_list)
+    unique_feat_path = output_dir_unique + "features.tsv.gz"
+    save_df_as_gz(unique_df, unique_feat_path)
     # start saving the matrix
-    file_path = "TE_Unique_matrix_Mar082024/matrix.mtx"
-    compress_sparse_matrix(unique_TEs_sparse_matrix, file_path)
+    unique_mtx_path = output_dir_unique + "matrix.mtx"
+    compress_sparse_matrix(unique_TEs_sparse_matrix, unique_mtx_path)
     print("Files saved to TE_Unique_matrix directory")
     # Print the elapsed time
     print(
         "info saved to respective directories",
-        display_elapsed_time(start_time, p=False),
-    )
+    #    display_elapsed_time(start_time, p=False),
+         )
     print("DONE")
