@@ -8,6 +8,7 @@ workflow steamer {
     parameter_meta {
       in_TEs: "Path to .gz or .csv file containing TEs"
       in_Frags: "Path to .gz or .csv file containing Fragments"
+      in_QCbar: "Path to .gz or .csv file containing QC'd barcodes"
     }
     call make_bedfiles {
       input:
