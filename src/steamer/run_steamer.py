@@ -73,7 +73,7 @@ def create_bed_for_TEs(filename: Path):
     return TE_bf_sort
 
 @app.command()
-def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Path | None, typer.Argument()] = None):
+def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Path, typer.Argument()] = Path("/this/is/a/null/path")):
     """
     Takes in a file (ideally a fragment file) and converts it into a BED file.
 
@@ -104,7 +104,7 @@ def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Pat
     valid_chromosomes = ["chr" + str(i) for i in range(1, 19)] + ["chrX", "chrY"]
     # drop any non valid chromosomes
     frag_df = frag_df[frag_df["Chromosome"].isin(valid_chromosomes)]
-    if quality_barcode_file is None:
+    if quality_barcode_file.exists() is False:
         frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
         frag_bf_sort = frag_bf.sort()
         frag_bf_sort.to_file("Frag.bed")
