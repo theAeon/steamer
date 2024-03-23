@@ -304,6 +304,7 @@ def display_elapsed_time(start_time, p=True):
 
 @app.command()
 def run_analysis(bed_intersect: Path, cell_barcodes: Path, sample_name: str):
+    load_bed_intersect = BedTool(bed_intersect)
     barcodes_df = pd.read_csv(
         cell_barcodes, sep="\t", names=["barcode"]
     )
@@ -314,7 +315,7 @@ def run_analysis(bed_intersect: Path, cell_barcodes: Path, sample_name: str):
         unique_TEs_list,
         TEs_fams,
         barcode_dict,
-    ) = make_cell_x_element_matrix(bed_intersect, barcodes)
+    ) = make_cell_x_element_matrix(load_bed_intersect, barcodes)
     unique_TEs_sparse_matrix = convert_df_to_sparse(unique_TEs_sparse_matrix)
     TE_Fams_sparse_matrix = convert_df_to_sparse(TE_Fams_sparse_matrix)
     print("Matrix(s) created",
