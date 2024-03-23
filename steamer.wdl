@@ -1,55 +1,39 @@
 version 1.0
-workflow steamer {
-    input {
-      File in_TEs
-      File in_Frags
-      File? in_QCbar
-    }
-    parameter_meta {
-      in_TEs: "Path to .gz or .csv file containing TEs"
-      in_Frags: "Path to .gz or .csv file containing Fragments"
-      in_QCbar: "Path to .gz or .csv file containing QC'd barcodes"
-    }
-    call make_bedfiles {
-      input:
-        TEs = in_TEs,
-        Frags = in_Frags,
-        QCbar = in_QCbar
-    }
-    call intersect_bedfiles {
-      input:
-        Frags = make_bedfiles.outFrags,
-        TEs = make_bedfiles.outTEs
-    }
-}
+import "prep.wdl" as prep
+import "analysis.wdl" as analysis
 
-task make_bedfiles {
-    input {
-        File TEs
-        File Frags
-        File? QCbar
-    }
-    command <<<
-      run_steamer create-bed-for-fragments ~{Frags} ~{QCbar} && run_steamer create-bed-for-tes ~{TEs}
-    >>>
-    output {
-      File outFrags = "Frag.bed"
-      File outTEs = "TEs.bed"
-    }
-  runtime {
-    docker: "ghcr.io/welch-lab/steamer:latest"
-  }
-}
 
-task intersect_bedfiles {
+workflow run_full {
   input {
-    File Frags
-    File TEs
+    File fullin_TEs
+    File fullin_Frags
+    File fullin_barcode_list
+    String fullin_sample_name
   }
-  command <<<
-    bedtools intersect -a ~{TEs} -b ~{Frags} -wb -sorted > bed_intersect.bed
-  >>>
+  parameter_meta {
+      fullin_TEs: "Path to .gz or .csv file containing TEs"
+      fullin_Frags: "Path to .gz or .csv file containing Fragments"
+      fullin_barcode_list: "Path to .gz or .csv file containing QC'd barcodes"
+      fullin_sample_name: "name of sample"
+  }
+  call prep.steamerprep {
+      input:
+        in_TEs = fullin_TEs,
+        in_Frags = fullin_Frags,
+        in_QCbar = fullin_barcode_list
+    }
+  call analysis.runsteamer {
+    input:
+      in_bedfile = steamerprep.prepped,
+      in_barcode_list = fullin_barcode_list,
+      in_sample_name = fullin_sample_name
+  }
   output {
-    File intersected = "bed_intersect.bed"
+    File FamMat = runsteamer.FamMat
+    File UniqueMat = runsteamer.UniqueMat
+    File UniqueDF = runsteamer.UniqueDF
+    File UniqueBar = runsteamer.UniqueBar
+    File FamDF = runsteamer.FamDF
+    File FamBar = runsteamer.FamBar
   }
 }

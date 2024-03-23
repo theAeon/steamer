@@ -1,5 +1,7 @@
 {
-  "steamer.in_QCbar": "File? (optional)",
-  "steamer.in_TEs": "File",
-  "steamer.in_Frags": "File"
+  "run_full.fullin_TEs": "File",
+  "run_full.fullin_barcode_list": "File",
+  "run_full.fullin_sample_name": "String",
+  "run_full.fullin_Frags": "File"
 }
+
