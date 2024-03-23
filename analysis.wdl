@@ -37,8 +37,8 @@ task run_analysis {
     run_steamer run-analysis ~{bedfile} ~{barcode_list} ~{sample_name}
   >>>
     output {
-    File FamMat = "TE_Fam_matrix_" + sample_name + "/matrix.mtx"
-    File UniqueMat = "TE_Unique_matrix_" + sample_name + "/matrix.mtx"
+    File FamMat = "TE_Fam_matrix_" + sample_name + "/matrix.mtx.gz"
+    File UniqueMat = "TE_Unique_matrix_" + sample_name + "/matrix.mtx.gz"
     File UniqueDF = "TE_Unique_matrix_" + sample_name + "/features.tsv.gz"
     File UniqueBar = "TE_Unique_matrix_" + sample_name + "/" + base
     File FamDF = "TE_Fam_matrix_" + sample_name + "/features.tsv.gz"
