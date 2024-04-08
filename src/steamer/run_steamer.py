@@ -121,19 +121,6 @@ def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Pat
 
     return frag_bf_sort
 
-
-def intersection(TE_bed, frag_bed):
-    """
-    This function takes a TE annotaiton file and a fragment file (both in .bed format) and use bedtools
-    to intersect them for finding overlaps.
-
-    The output file is another bed file.
-
-    """
-    bed_intersect = TE_bed.intersect(frag_bed, wb=True, sorted=True)
-    return bed_intersect
-
-
 def make_cell_x_element_matrix(bed_intersect, cell_barcodes):
     # Initialize lists and dictionaries
     row_indices = []  # Row indices for sparse matrix
