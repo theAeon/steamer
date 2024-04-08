@@ -121,8 +121,10 @@ def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Pat
 
     return frag_bf_sort
 
-def make_cell_x_element_matrix(bed_intersect, cell_barcodes):
+def make_cell_x_element_matrix(bed_intersect, cell_barcodes=None):
     # Initialize lists and dictionaries
+    if cell_barcodes is None:
+        cell_barcodes = []
     row_indices = []  # Row indices for sparse matrix
     col_indices = []  # Column indices for sparse matrix (corresponding to UniqueTE)
     fams_col_indices = []  # Column indices for sparse matrix (corresponding to TE_Fam)
