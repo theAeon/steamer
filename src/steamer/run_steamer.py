@@ -73,7 +73,7 @@ def create_bed_for_TEs(filename: Path):
     return TE_bf_sort
 
 @app.command()
-def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Path, typer.Argument()] = Path("/this/is/a/null/path")):
+def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Path, typer.Argument()]):
     """
     Takes in a file (ideally a fragment file) and converts it into a BED file.
 
@@ -104,20 +104,25 @@ def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Pat
     valid_chromosomes = ["chr" + str(i) for i in range(1, 19)] + ["chrX", "chrY"]
     # drop any non valid chromosomes
     frag_df = frag_df[frag_df["Chromosome"].isin(valid_chromosomes)]
-    if quality_barcode_file.exists() is False:
-        frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
-        frag_bf_sort = frag_bf.sort()
-        frag_bf_sort.to_file("Frag.bed")
+    if quality_barcode_file:
+        if quality_barcode_file.exists() is False:
+            frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
+            frag_bf_sort = frag_bf.sort()
+            frag_bf_sort.to_file("Frag.bed")
+        else:
+            quality_barcodes_df = pd.read_csv(
+                quality_barcode_file, sep="\t", names=["barcode"]
+            )
+            quality_barcodes = quality_barcodes_df["barcode"].tolist()
+            print(len(quality_barcodes))
+            frag_df = frag_df[frag_df["barcode"].isin(quality_barcodes)]
+            frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
+            frag_bf_sort = frag_bf.sort()
+            frag_bf_sort.to_file("Frag.bed")
     else:
-        quality_barcodes_df = pd.read_csv(
-            quality_barcode_file, sep="\t", names=["barcode"]
-        )
-        quality_barcodes = quality_barcodes_df["barcode"].tolist()
-        print(len(quality_barcodes))
-        frag_df = frag_df[frag_df["barcode"].isin(quality_barcodes)]
-        frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
-        frag_bf_sort = frag_bf.sort()
-        frag_bf_sort.to_file("Frag.bed")
+            frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
+            frag_bf_sort = frag_bf.sort()
+            frag_bf_sort.to_file("Frag.bed")
 
     return frag_bf_sort
 
@@ -292,12 +297,15 @@ def display_elapsed_time(start_time, p=True):
         return f"Elapsed time: {hours} hours, {minutes} minutes, {seconds} seconds"
 
 @app.command()
-def run_analysis(bed_intersect: Path, cell_barcodes: Path, sample_name: str):
+def run_analysis(bed_intersect: Path, sample_name: str, cell_barcodes: Annotated[Path, typer.Argument()]):
     load_bed_intersect = BedTool(bed_intersect)
-    barcodes_df = pd.read_csv(
-        cell_barcodes, sep="\t", names=["barcode"]
-    )
-    barcodes = barcodes_df["barcode"].tolist()
+    if cell_barcodes:
+        barcodes_df = pd.read_csv(
+            cell_barcodes, sep="\t", names=["barcode"]
+        )
+        barcodes = barcodes_df["barcode"].tolist()
+    else:
+        barcodes = None
     (
         unique_TEs_sparse_matrix,
         TE_Fams_sparse_matrix,
