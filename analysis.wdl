@@ -1,7 +1,7 @@
 version 1.0
 workflow runsteamer {
   input {
-    File in_bedfile
+    File? in_bedfile
     File? in_barcode_list
     String in_sample_name
   }
@@ -28,7 +28,7 @@ workflow runsteamer {
 
 task run_analysis {
   input {
-    File bedfile
+    File? bedfile
     File? barcode_list
     String sample_name
   }
