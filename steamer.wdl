@@ -7,7 +7,7 @@ workflow run_full {
   input {
     File fullin_TEs
     File fullin_Frags
-    File fullin_barcode_list
+    File? fullin_barcode_list
     String fullin_sample_name
   }
   parameter_meta {

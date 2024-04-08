@@ -2,7 +2,7 @@ version 1.0
 workflow runsteamer {
   input {
     File in_bedfile
-    File in_barcode_list
+    File? in_barcode_list
     String in_sample_name
   }
   parameter_meta {
@@ -29,20 +29,19 @@ workflow runsteamer {
 task run_analysis {
   input {
     File bedfile
-    File barcode_list
+    File? barcode_list
     String sample_name
-    String base = basename(barcode_list)
   }
   command <<<
-    run_steamer run-analysis ~{bedfile} ~{barcode_list} ~{sample_name}
+    run_steamer run-analysis ~{bedfile} ~{sample_name} ~{barcode_list}
   >>>
     output {
     File FamMat = "TE_Fam_matrix_" + sample_name + "/matrix.mtx.gz"
     File UniqueMat = "TE_Unique_matrix_" + sample_name + "/matrix.mtx.gz"
     File UniqueDF = "TE_Unique_matrix_" + sample_name + "/features.tsv.gz"
-    File UniqueBar = "TE_Unique_matrix_" + sample_name + "/" + base
+    File UniqueBar = "TE_Unique_matrix_" + sample_name + "/barcodes.tsv.gz"
     File FamDF = "TE_Fam_matrix_" + sample_name + "/features.tsv.gz"
-    File FamBar = "TE_Fam_matrix_" + sample_name + "/" + base
+    File FamBar = "TE_Fam_matrix_" + sample_name + "/barcodes.tsv.gz"
   }
   runtime {
     docker: "ghcr.io/welch-lab/steamer:latest"
