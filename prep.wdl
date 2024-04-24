@@ -1,8 +1,8 @@
 version 1.0
 workflow steamerprep {
     input {
-      File in_TEs
-      File in_Frags
+      File? in_TEs
+      File? in_Frags
       File? in_QCbar
     }
     parameter_meta {
@@ -28,8 +28,8 @@ workflow steamerprep {
 
 task make_bedfiles {
     input {
-        File TEs
-        File Frags
+        File? TEs
+        File? Frags
         File? QCbar
     }
     command <<<
@@ -46,8 +46,8 @@ task make_bedfiles {
 
 task intersect_bedfiles {
   input {
-    File Frags
-    File TEs
+    File? Frags
+    File? TEs
   }
   command <<<
     bedtools intersect -a ~{TEs} -b ~{Frags} -wb -sorted > bed_intersect.bed
