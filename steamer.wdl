@@ -5,8 +5,8 @@ import "analysis.wdl" as analysis
 
 workflow run_full {
   input {
-    File fullin_TEs
-    File fullin_Frags
+    File? fullin_TEs
+    File? fullin_Frags
     File? fullin_Intersected
     File? fullin_barcode_list
     String fullin_sample_name
