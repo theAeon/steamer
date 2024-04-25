@@ -13,20 +13,19 @@ workflow run_full {
     Int memory_GB
   }
   parameter_meta {
-      fullin_TEs: "Path to .gz or .csv file containing TEs"
-      fullin_Frags: "Path to .gz or .csv file containing Fragments"
+      fullin_TEs: "Path to bed file containing TEs"
+      fullin_Frags: "Path to bed file containing Fragments"
       fullin_Intersected: "Pre-intersected bed file"
       fullin_barcode_list: "Path to .gz or .csv file containing QC'd barcodes"
       fullin_sample_name: "name of sample"
       memory_GB: "memory, in gigabytes"
   }
   if (!defined(fullin_Intersected)) {
-      call prep.steamerprep {
+      call prep.intersect_bedfiles {
           input:
-            in_TEs = fullin_TEs,
-            in_Frags = fullin_Frags,
-            in_QCbar = fullin_barcode_list,
-            in_mem = memory_GB
+            TEs = fullin_TEs,
+            Frags = fullin_Frags,
+            mem = memory_GB
         }
       call analysis.runsteamer as prepped {
           input:
