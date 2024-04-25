@@ -16,7 +16,7 @@ workflow runsteamer {
     input:
       bedfile = in_bedfile,
       barcode_list = in_barcode_list,
-      sample_name = in_sample_name
+      sample_name = in_sample_name,
       taskmem = mem
   }
   output {

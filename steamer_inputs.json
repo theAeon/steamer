@@ -3,6 +3,7 @@
   "run_full.fullin_barcode_list": "File",
   "run_full.fullin_Intersected": "File",
   "run_full.fullin_sample_name": "String",
-  "run_full.fullin_Frags": "File"
+  "run_full.fullin_Frags": "File",
+  "run_full.memory_GB": "Int"
 }
 

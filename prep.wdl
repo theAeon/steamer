@@ -16,13 +16,13 @@ workflow steamerprep {
       input:
         TEs = in_TEs,
         Frags = in_Frags,
-        QCbar = in_QCbar
+        QCbar = in_QCbar,
         taskmem = mem
     }
     call intersect_bedfiles {
       input:
         Frags = make_bedfiles.outFrags,
-        TEs = make_bedfiles.outTEs
+        TEs = make_bedfiles.outTEs,
         taskmem = mem
     }
     output {

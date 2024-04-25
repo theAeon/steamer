@@ -25,14 +25,14 @@ workflow run_full {
           input:
             in_TEs = fullin_TEs,
             in_Frags = fullin_Frags,
-            in_QCbar = fullin_barcode_list
+            in_QCbar = fullin_barcode_list,
             mem = memory_GB
         }
       call analysis.runsteamer as prepped {
           input:
             in_bedfile = steamerprep.prepped,
             in_barcode_list = fullin_barcode_list,
-            in_sample_name = fullin_sample_name
+            in_sample_name = fullin_sample_name,
             mem = memory_GB
         }
     }
@@ -41,7 +41,7 @@ workflow run_full {
           input:
             in_bedfile = fullin_Intersected,
             in_barcode_list = fullin_barcode_list,
-            in_sample_name = fullin_sample_name
+            in_sample_name = fullin_sample_name,
             mem = memory_GB
         }
   }
