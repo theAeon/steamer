@@ -4,22 +4,26 @@ workflow steamerprep {
       File? in_TEs
       File? in_Frags
       File? in_QCbar
+      Int mem
     }
     parameter_meta {
       in_TEs: "Path to .gz or .csv file containing TEs"
       in_Frags: "Path to .gz or .csv file containing Fragments"
       in_QCbar: "Path to .gz or .csv file containing QC'd barcodes"
+      mem: "Memory in GB"
     }
     call make_bedfiles {
       input:
         TEs = in_TEs,
         Frags = in_Frags,
         QCbar = in_QCbar
+        taskmem = mem
     }
     call intersect_bedfiles {
       input:
         Frags = make_bedfiles.outFrags,
         TEs = make_bedfiles.outTEs
+        taskmem = mem
     }
     output {
       File prepped = intersect_bedfiles.intersected
@@ -41,6 +45,7 @@ task make_bedfiles {
     }
   runtime {
     docker: "ghcr.io/welch-lab/steamer:latest"
+    memory: taskmem + "GB"
   }
 }
 
@@ -57,5 +62,6 @@ task intersect_bedfiles {
   }
     runtime {
     docker: "ghcr.io/welch-lab/steamer:latest"
+    memory: taskmem + "GB"
   }
 }
