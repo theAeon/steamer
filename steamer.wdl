@@ -29,7 +29,7 @@ workflow run_full {
         }
       call analysis.runsteamer as prepped {
           input:
-            in_bedfile = intersect_bedfiles.prepped,
+            in_bedfile = intersect_bedfiles.intersected,
             in_barcode_list = fullin_barcode_list,
             in_sample_name = fullin_sample_name,
             in_mem = memory_GB
