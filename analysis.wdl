@@ -4,20 +4,20 @@ workflow runsteamer {
     File? in_bedfile
     File? in_barcode_list
     String in_sample_name
-    Int mem
+    Int in_mem
   }
   parameter_meta {
     in_bedfile: "Path to intersected bedfile"
     in_barcode_list: "Path to barcode list"
     in_sample_name: "name of sample"
-    mem: "Memory in GB"
+    in_mem: "Memory in GB"
   }
   call run_analysis {
     input:
       bedfile = in_bedfile,
       barcode_list = in_barcode_list,
       sample_name = in_sample_name,
-      taskmem = mem
+      mem = in_mem
   }
   output {
     File FamMat = run_analysis.FamMat
@@ -34,7 +34,7 @@ task run_analysis {
     File? bedfile
     File? barcode_list
     String sample_name
-    Int taskmem
+    Int mem
   }
   command <<<
     run_steamer run-analysis ~{bedfile} ~{sample_name} ~{barcode_list}
@@ -49,6 +49,6 @@ task run_analysis {
   }
   runtime {
     docker: "ghcr.io/welch-lab/steamer:latest"
-    memory: taskmem + "GB"
+    memory: mem + "GB"
   }
 }
