@@ -247,7 +247,7 @@ def compress_tsv_file(file_name, output_dir, barcode):
     # Create the output file path
     output_file_path = PurePath.joinpath(Path(output_dir), file_name)
     # Write the TSV.GZ file
-    with gzip.open(file_name, "wt", newline="") as tsv_file:
+    with gzip.open(output_file_path, "wt", newline="") as tsv_file:
         writer = csv.writer(tsv_file, delimiter="\t")
         for barcode in barcode.keys():
             writer.writerow([barcode])
