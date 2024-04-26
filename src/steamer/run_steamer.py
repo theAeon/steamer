@@ -322,7 +322,7 @@ def run_analysis(bed_intersect: Path, sample_name: str, cell_barcodes: Annotated
     output_dir_fam = "TE_Fam_matrix_" + sample_name + "/"
     os.makedirs(output_dir_fam, exist_ok=True)
     # start saving barcode info
-    compress_tsv_file(cell_barcodes, output_dir_fam, barcode_dict)
+    compress_tsv_file("barcodes.tsv.gz", output_dir_fam, barcode_dict)
     # starting saving the features
     fam_df = make_features_df(TEs_fams)
     fam_path = output_dir_fam + "features.tsv.gz"
@@ -335,7 +335,7 @@ def run_analysis(bed_intersect: Path, sample_name: str, cell_barcodes: Annotated
     output_dir_unique = "TE_Unique_matrix_" + sample_name + "/"
     os.makedirs(output_dir_unique, exist_ok=True)
     # start saving barcode info
-    compress_tsv_file(cell_barcodes, output_dir_unique, barcode_dict)
+    compress_tsv_file("barcodes.tsv.gz", output_dir_unique, barcode_dict)
     # start saving the features
     unique_df = make_features_df(unique_TEs_list)
     unique_feat_path = output_dir_unique + "features.tsv.gz"
