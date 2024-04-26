@@ -240,23 +240,17 @@ def convert_df_to_sparse(df):
     return csr_mat
 
 
-def compress_tsv_file(file_path, output_dir, barcode):
+def compress_tsv_file(file_name, output_dir, barcode):
     """
-    Takes in a file_path,out_dir, and the barcodes to make a .gzip .tsv file
+    Takes in a string,out_dir, and the barcodes to make a .gzip .tsv file
     """
     # Create the output file path
-    output_file_path = PurePath.joinpath(Path(output_dir), (file_path.parent / (file_path.name + '.gz')))
-    # Write the TSV file
-    with open(file_path, "w", newline="") as tsv_file:
+    output_file_path = PurePath.joinpath(Path(output_dir), file_name)
+    # Write the TSV.GZ file
+    with gzip.open(file_name, "wt", newline="") as tsv_file:
         writer = csv.writer(tsv_file, delimiter="\t")
         for barcode in barcode.keys():
             writer.writerow([barcode])
-    # Compress the TSV file to gzip format
-    with open(file_path, "rb") as f_in, gzip.open(output_file_path, "wb") as f_out:
-        f_out.writelines(f_in)
-    # Remove the original TSV file
-    os.remove(file_path)
-
 
 def make_features_df(TE_dict):
     # Convert TEs_fams dictionary to a DataFrame
