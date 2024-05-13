@@ -2,11 +2,14 @@ FROM python:3.12-bookworm
 
 LABEL org.opencontainers.image.source=https://github.com/welch-lab/steamer
 
-RUN <<EOF
-set -e
-apt update && apt install bedtools libhdf5-dev -y
-git clone https://github.com/welch-lab/steamer.git
-cd steamer && pip install -r requirements.txt
-EOF
+RUN apt-get update && apt-get install bedtools libhdf5-dev -y
 
-RUN pip install ./steamer
+COPY requirements.txt /src/
+
+WORKDIR /src/
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY pyproject.toml src /src/
+
+RUN pip install ./
