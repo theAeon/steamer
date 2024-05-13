@@ -10,6 +10,7 @@ workflow run_full {
     File? fullin_Intersected
     File? fullin_barcode_list
     String fullin_sample_name
+    String Mode = "ATAC"
     Int memory_GB
   }
   parameter_meta {
@@ -45,12 +46,12 @@ workflow run_full {
         }
   }
   output {
-    File FamMat = select_first([prepped.FamMat, premade.FamMat])
-    File UniqueMat = select_first([prepped.UniqueMat, premade.UniqueMat])
-    File UniqueDF = select_first([prepped.UniqueDF, premade.UniqueDF])
-    File UniqueBar = select_first([prepped.UniqueBar, premade.UniqueBar])
-    File FamDF = select_first([prepped.FamDF, premade.FamDF])
-    File FamBar = select_first([prepped.FamBar, premade.FamBar])
+    Array[File] Mat = [select_first([prepped.FamMat, premade.FamMat]),
+                      select_first([prepped.UniqueMat, premade.UniqueMat])]
+    Array[File] DF = [select_first([prepped.UniqueDF, premade.UniqueDF]),
+                      select_first([prepped.FamDF, premade.FamDF])]
+    Array[File] Bar = [select_first([prepped.UniqueBar, premade.UniqueBar]),
+                       select_first([prepped.FamBar, premade.FamBar])]
   }
 }
   task run_rna {
