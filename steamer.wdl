@@ -45,30 +45,24 @@ workflow run_full {
         }
   }
   output {
-    File? preppedFamMat = prepped.FamMat
-    File? preppedUniqueMat = prepped.UniqueMat
-    File? preppedUniqueDF = prepped.UniqueDF
-    File? preppedUniqueBar = prepped.UniqueBar
-    File? preppedFamDF = prepped.FamDF
-    File? preppedFamBar = prepped.FamBar
-    File? premadeFamMat = prepped.FamMat
-    File? premadeUniqueMat = premade.UniqueMat
-    File? premadeUniqueDF = premade.UniqueDF
-    File? premadeUniqueBar = premade.UniqueBar
-    File? premadeFamDF = premade.FamDF
-    File? premadeFamBar = premade.FamBar
+    File FamMat = select_first([prepped.FamMat, premade.FamMat])
+    File UniqueMat = select_first([prepped.UniqueMat, premade.UniqueMat])
+    File UniqueDF = select_first([prepped.UniqueDF, premade.UniqueDF])
+    File UniqueBar = select_first([prepped.UniqueBar, premade.UniqueBar])
+    File FamDF = select_first([prepped.FamDF, premade.FamDF])
+    File FamBar = select_first([prepped.FamBar, premade.FamBar])
   }
 }
   task run_rna {
     input {
-      File idx
-      File TEs
+      File index
+      File t2gs
       String SampleName
       Int mem
       Array[File]+ fastqs
     }
     command <<<
-      kb count -i ~{idx} -g ~{TEs} --h5ad -x 10XV3 -o ~{SampleName} -m ~{mem}G --verbose ${sep=' ' fastqs}
+      kb count -i ~{index} -g ~{t2gs} --h5ad -x 10XV3 -o ~{SampleName} -m ~{mem}G --verbose ${sep=' ' fastqs}
     >>>
     output {
       File TenxWhiteList = SampleName + "/10x_version3_whitelist.txt"
