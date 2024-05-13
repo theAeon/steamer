@@ -9,8 +9,12 @@ workflow run_full {
     File? fullin_Frags
     File? fullin_Intersected
     File? fullin_barcode_list
+    File? full_index
+    File? full_t2gs
+    Array[File]? full_fastqs
     String fullin_sample_name
-    String Mode = "ATAC"
+    Boolean ATAC = true
+    Boolean RNA = false
     Int memory_GB
   }
   parameter_meta {
@@ -19,8 +23,15 @@ workflow run_full {
       fullin_Intersected: "Pre-intersected bed file"
       fullin_barcode_list: "Path to .gz or .csv file containing QC'd barcodes"
       fullin_sample_name: "name of sample"
+      ATAC: "check for ATAC"
+      RNA: "check for RNA"
       memory_GB: "memory, in gigabytes"
   }
+  if (ATAC && RNA) {
+     call error {}
+  }
+  if (!(ATAC && RNA)) {
+  if (ATAC) {
   if (!defined(fullin_Intersected)) {
       call prep.intersect_bedfiles {
           input:
@@ -45,10 +56,22 @@ workflow run_full {
             in_mem = memory_GB
         }
   }
+  }
+  if (RNA) {
+    call run_rna {
+      input:
+        index = full_index,
+        t2gs = full_t2gs,
+        SampleName = fullin_sample_name,
+        mem = memory_GB,
+        fastqs = full_fastqs
+    }
+  }
+  }
   output {
     Array[File] Mat = [select_first([prepped.FamMat, premade.FamMat]),
                       select_first([prepped.UniqueMat, premade.UniqueMat])]
-    Array[File] DF = [select_first([prepped.UniqueDF, premade.UniqueDF]),
+    Array[File] DF =  [select_first([prepped.UniqueDF, premade.UniqueDF]),
                       select_first([prepped.FamDF, premade.FamDF])]
     Array[File] Bar = [select_first([prepped.UniqueBar, premade.UniqueBar]),
                        select_first([prepped.FamBar, premade.FamBar])]
@@ -56,11 +79,11 @@ workflow run_full {
 }
   task run_rna {
     input {
-      File index
-      File t2gs
+      File? index
+      File? t2gs
       String SampleName
       Int mem
-      Array[File]+ fastqs
+      Array[File]? fastqs
     }
     command <<<
       kb count -i ~{index} -g ~{t2gs} --h5ad -x 10XV3 -o ~{SampleName} -m ~{mem}G --verbose ${sep=' ' fastqs}
@@ -84,4 +107,9 @@ workflow run_full {
     docker: "ghcr.io/welch-lab/steamer:latest"
     memory: mem + "GB"
   }
+  }
+  task error {
+    command <<<
+      echo "Invalid input"
+    >>>
   }
