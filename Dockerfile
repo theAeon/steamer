@@ -10,6 +10,6 @@ WORKDIR /src/
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY pyproject.toml src /src/
+COPY pyproject.toml README.md src /src/
 
 RUN pip install ./
