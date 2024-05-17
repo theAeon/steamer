@@ -112,4 +112,7 @@ workflow run_full {
     command <<<
       echo "Invalid input"
     >>>
+    runtime {
+      docker: "ghcr.io/welch-lab/steamer:latest"
+    }
   }
