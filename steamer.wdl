@@ -64,7 +64,7 @@ workflow run_full {
         t2gs = full_t2gs,
         SampleName = fullin_sample_name,
         mem = memory_GB,
-        fastqs = full_fastqs
+        fastqs = select_first([full_fastqs])
     }
   }
   }
@@ -83,7 +83,7 @@ workflow run_full {
       File? t2gs
       String SampleName
       Int mem
-      Array[File]? fastqs
+      Array[File] fastqs
     }
     command <<<
       kb count -i ~{index} -g ~{t2gs} --h5ad -x 10XV3 -o ~{SampleName} -m ~{mem}G --verbose ${sep=' ' fastqs}
