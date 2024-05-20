@@ -106,6 +106,7 @@ workflow run_full {
   runtime {
     docker: "ghcr.io/welch-lab/steamer:latest"
     memory: mem + "GB"
+    disks: "local-disk 50 SSD"
   }
   }
   task error {
