@@ -86,7 +86,7 @@ workflow run_full {
       Array[File] fastqs
     }
     command <<<
-      kb count -i ~{index} -g ~{t2gs} --h5ad -x 10XV3 -o ~{SampleName} -m ~{mem}G --verbose ${sep=' ' fastqs}
+      kb count -i ~{index} -g ~{t2gs} --h5ad -x 10XV3 -o ~{SampleName} -m ~{mem}G --verbose ~{sep=' ' fastqs}
     >>>
     output {
       File TenxWhiteList = SampleName + "/10x_version3_whitelist.txt"
