@@ -69,12 +69,9 @@ workflow run_full {
   }
   }
   output {
-    Array[File] Mat = select_all([run_rna.mtx,
-      select_first([prepped.FamMat, premade.FamMat]), select_first([prepped.UniqueMat, premade.UniqueMat])])
-    Array[File] DF =  select_all([run_rna.genes,
-      select_first([prepped.UniqueDF, premade.UniqueDF]), select_first([prepped.FamDF, premade.FamDF])])
-    Array[File] Bar = select_all([run_rna.barcodes,
-      select_first([prepped.UniqueBar, premade.UniqueBar]), select_first([prepped.FamBar, premade.FamBar])])
+    Array[File] Mat = select_all([run_rna.mtx, prepped.FamMat, premade.FamMat, prepped.UniqueMat, premade.UniqueMat])
+    Array[File] DF =  select_all([run_rna.genes, prepped.UniqueDF, premade.UniqueDF, prepped.FamDF, premade.FamDF])
+    Array[File] Bar = select_all([run_rna.barcodes, prepped.UniqueBar, premade.UniqueBar, prepped.FamBar, premade.FamBar])
   }
 }
   task run_rna {
