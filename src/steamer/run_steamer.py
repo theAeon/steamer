@@ -120,9 +120,9 @@ def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Pat
             frag_bf_sort = frag_bf.sort()
             frag_bf_sort.to_file("Frag.bed")
     else:
-            frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
-            frag_bf_sort = frag_bf.sort()
-            frag_bf_sort.to_file("Frag.bed")
+        frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
+        frag_bf_sort = frag_bf.sort()
+        frag_bf_sort.to_file("Frag.bed")
 
     return frag_bf_sort
 
