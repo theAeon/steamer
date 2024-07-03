@@ -14,6 +14,7 @@ from fuc import pybed
 from pybedtools import BedTool
 from scipy.io import mmwrite
 from scipy.sparse import coo_matrix, csr_matrix
+from ALLCools.mcds import MCDS
 
 app = typer.Typer()
 
