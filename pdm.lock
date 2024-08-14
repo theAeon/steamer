@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:b7b93f27805b5828897467a2554da9604acd216a89a941067703498f4a2ec87d"
+content_hash = "sha256:66f294678a261c5d351d97b0e07c87b055f541f9cee1565447e19cac1e22a702"
 
 [[package]]
 name = "allcools"
@@ -61,6 +61,15 @@ groups = ["default"]
 files = [
     {file = "array_api_compat-1.4.1-py3-none-any.whl", hash = "sha256:dd212f0ed925763e1c3e98d822b80cb57c35ace6692a452430bb2d533e938069"},
     {file = "array_api_compat-1.4.1.tar.gz", hash = "sha256:053103b7c0ba73626bff7380abf27a29dc80de144394137bc7455b7eba23d8c0"},
+]
+
+[[package]]
+name = "asciitree"
+version = "0.3.3"
+summary = "Draws ASCII trees."
+groups = ["default"]
+files = [
+    {file = "asciitree-0.3.3.tar.gz", hash = "sha256:4aa4b9b649f85e3fcb343363d97564aa1fb62e249677f2e18a96765145cc0f6e"},
 ]
 
 [[package]]
@@ -249,6 +258,17 @@ files = [
 ]
 
 [[package]]
+name = "cloudpickle"
+version = "3.0.0"
+requires_python = ">=3.8"
+summary = "Pickler class to extend the standard pickle.Pickler functionality"
+groups = ["default"]
+files = [
+    {file = "cloudpickle-3.0.0-py3-none-any.whl", hash = "sha256:246ee7d0c295602a036e86369c77fecda4ab17b506496730f2f576d9016fd9c7"},
+    {file = "cloudpickle-3.0.0.tar.gz", hash = "sha256:996d9a482c6fb4f33c1a35335cf8afd065d2a56e973270364840712d9131a882"},
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
@@ -298,6 +318,27 @@ files = [
 ]
 
 [[package]]
+name = "dask"
+version = "2024.6.2"
+requires_python = ">=3.9"
+summary = "Parallel PyData with Task Scheduling"
+groups = ["default"]
+dependencies = [
+    "click>=8.1",
+    "cloudpickle>=1.5.0",
+    "fsspec>=2021.09.0",
+    "importlib-metadata>=4.13.0; python_version < \"3.12\"",
+    "packaging>=20.0",
+    "partd>=1.2.0",
+    "pyyaml>=5.3.1",
+    "toolz>=0.10.0",
+]
+files = [
+    {file = "dask-2024.6.2-py3-none-any.whl", hash = "sha256:81b80ee015b2e057b93bb2d1bf13a866136e762e2b24bf54b6b621e8b86b7708"},
+    {file = "dask-2024.6.2.tar.gz", hash = "sha256:d429d6b19e85fd1306ac37c188aaf99d03bbe69a6fe59d2b42882b2ac188686f"},
+]
+
+[[package]]
 name = "defusedxml"
 version = "0.7.1"
 requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
@@ -318,6 +359,18 @@ marker = "python_version < \"3.11\""
 files = [
     {file = "exceptiongroup-1.2.0-py3-none-any.whl", hash = "sha256:4bfd3996ac73b41e9b9628b04e079f193850720ea5945fc96a08633c66912f14"},
     {file = "exceptiongroup-1.2.0.tar.gz", hash = "sha256:91f5c769735f051a4290d52edd0858999b57e5876e9f85937691bd4c9fa3ed68"},
+]
+
+[[package]]
+name = "fasteners"
+version = "0.19"
+requires_python = ">=3.6"
+summary = "A python package that provides useful locks"
+groups = ["default"]
+marker = "sys_platform != \"emscripten\""
+files = [
+    {file = "fasteners-0.19-py3-none-any.whl", hash = "sha256:758819cb5d94cdedf4e836988b74de396ceacb8e2794d21f82d131fd9ee77237"},
+    {file = "fasteners-0.19.tar.gz", hash = "sha256:b4f37c3ac52d8a445af3a66bce57b33b5e90b97c696b7b984f530cf8f0ded09c"},
 ]
 
 [[package]]
@@ -347,6 +400,17 @@ files = [
     {file = "fonttools-4.49.0-cp312-cp312-win_amd64.whl", hash = "sha256:a974c49a981e187381b9cc2c07c6b902d0079b88ff01aed34695ec5360767034"},
     {file = "fonttools-4.49.0-py3-none-any.whl", hash = "sha256:af281525e5dd7fa0b39fb1667b8d5ca0e2a9079967e14c4bfe90fd1cd13e0f18"},
     {file = "fonttools-4.49.0.tar.gz", hash = "sha256:ebf46e7f01b7af7861310417d7c49591a85d99146fc23a5ba82fdb28af156321"},
+]
+
+[[package]]
+name = "fsspec"
+version = "2024.6.1"
+requires_python = ">=3.8"
+summary = "File-system specification"
+groups = ["default"]
+files = [
+    {file = "fsspec-2024.6.1-py3-none-any.whl", hash = "sha256:3cb443f8bcd2efb31295a5b9fdb02aee81d8452c80d28f97a6d0959e6cee101e"},
+    {file = "fsspec-2024.6.1.tar.gz", hash = "sha256:fad7d7e209dd4c1208e3bbfda706620e0da5142bebbd9c384afb95b07e798e49"},
 ]
 
 [[package]]
@@ -398,6 +462,21 @@ groups = ["default"]
 files = [
     {file = "idna-3.6-py3-none-any.whl", hash = "sha256:c05567e9c24a6b9faaa835c4821bad0590fbb9d5779e7caa6e1cc4978e7eb24f"},
     {file = "idna-3.6.tar.gz", hash = "sha256:9ecdbbd083b06798ae1e86adcbfe8ab1479cf864e4ee30fe4e46a003d12491ca"},
+]
+
+[[package]]
+name = "importlib-metadata"
+version = "8.0.0"
+requires_python = ">=3.8"
+summary = "Read metadata from Python packages"
+groups = ["default"]
+marker = "python_version < \"3.12\""
+dependencies = [
+    "zipp>=0.5",
+]
+files = [
+    {file = "importlib_metadata-8.0.0-py3-none-any.whl", hash = "sha256:15584cf2b1bf449d98ff8a6ff1abef57bf20f3ac6454f431736cd3e660921b2f"},
+    {file = "importlib_metadata-8.0.0.tar.gz", hash = "sha256:188bd24e4c346d3f0a933f275c2fec67050326a856b9a359881d7c2a697e8812"},
 ]
 
 [[package]]
@@ -581,6 +660,17 @@ files = [
     {file = "llvmlite-0.42.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d47494552559e00d81bfb836cf1c4d5a5062e54102cc5767d5aa1e77ccd2505c"},
     {file = "llvmlite-0.42.0-cp312-cp312-win_amd64.whl", hash = "sha256:05cb7e9b6ce69165ce4d1b994fbdedca0c62492e537b0cc86141b6e2c78d5888"},
     {file = "llvmlite-0.42.0.tar.gz", hash = "sha256:f92b09243c0cc3f457da8b983f67bd8e1295d0f5b3746c7a1861d7a99403854a"},
+]
+
+[[package]]
+name = "locket"
+version = "1.0.0"
+requires_python = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+summary = "File-based locks for Python on Linux and Windows"
+groups = ["default"]
+files = [
+    {file = "locket-1.0.0-py2.py3-none-any.whl", hash = "sha256:b6c819a722f7b6bd955b80781788e4a66a55628b858d347536b7e81325a3a5e3"},
+    {file = "locket-1.0.0.tar.gz", hash = "sha256:5c0d4c052a8bbbf750e056a8e65ccd309086f4f0f18a2eac306a8dfa4112a632"},
 ]
 
 [[package]]
@@ -878,6 +968,31 @@ files = [
 ]
 
 [[package]]
+name = "numcodecs"
+version = "0.12.1"
+requires_python = ">=3.8"
+summary = "A Python package providing buffer compression and transformation codecs for use in data storage and communication applications."
+groups = ["default"]
+dependencies = [
+    "numpy>=1.7",
+]
+files = [
+    {file = "numcodecs-0.12.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d37f628fe92b3699e65831d5733feca74d2e33b50ef29118ffd41c13c677210e"},
+    {file = "numcodecs-0.12.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:941b7446b68cf79f089bcfe92edaa3b154533dcbcd82474f994b28f2eedb1c60"},
+    {file = "numcodecs-0.12.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:0e79bf9d1d37199ac00a60ff3adb64757523291d19d03116832e600cac391c51"},
+    {file = "numcodecs-0.12.1-cp310-cp310-win_amd64.whl", hash = "sha256:82d7107f80f9307235cb7e74719292d101c7ea1e393fe628817f0d635b7384f5"},
+    {file = "numcodecs-0.12.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:eeaf42768910f1c6eebf6c1bb00160728e62c9343df9e2e315dc9fe12e3f6071"},
+    {file = "numcodecs-0.12.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:135b2d47563f7b9dc5ee6ce3d1b81b0f1397f69309e909f1a35bb0f7c553d45e"},
+    {file = "numcodecs-0.12.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a191a8e347ecd016e5c357f2bf41fbcb026f6ffe78fff50c77ab12e96701d155"},
+    {file = "numcodecs-0.12.1-cp311-cp311-win_amd64.whl", hash = "sha256:21d8267bd4313f4d16f5b6287731d4c8ebdab236038f29ad1b0e93c9b2ca64ee"},
+    {file = "numcodecs-0.12.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:2f84df6b8693206365a5b37c005bfa9d1be486122bde683a7b6446af4b75d862"},
+    {file = "numcodecs-0.12.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:760627780a8b6afdb7f942f2a0ddaf4e31d3d7eea1d8498cf0fd3204a33c4618"},
+    {file = "numcodecs-0.12.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c258bd1d3dfa75a9b708540d23b2da43d63607f9df76dfa0309a7597d1de3b73"},
+    {file = "numcodecs-0.12.1-cp312-cp312-win_amd64.whl", hash = "sha256:e04649ea504aff858dbe294631f098fbfd671baf58bfc04fc48d746554c05d67"},
+    {file = "numcodecs-0.12.1.tar.gz", hash = "sha256:05d91a433733e7eef268d7e80ec226a0232da244289614a8f3826901aec1098e"},
+]
+
+[[package]]
 name = "numpy"
 version = "1.26.4"
 requires_python = ">=3.9"
@@ -976,6 +1091,21 @@ groups = ["default"]
 files = [
     {file = "pandocfilters-1.5.1-py2.py3-none-any.whl", hash = "sha256:93be382804a9cdb0a7267585f157e5d1731bbe5545a85b268d6f5fe6232de2bc"},
     {file = "pandocfilters-1.5.1.tar.gz", hash = "sha256:002b4a555ee4ebc03f8b66307e287fa492e4a77b4ea14d3f934328297bb4939e"},
+]
+
+[[package]]
+name = "partd"
+version = "1.4.2"
+requires_python = ">=3.9"
+summary = "Appendable key-value storage"
+groups = ["default"]
+dependencies = [
+    "locket",
+    "toolz",
+]
+files = [
+    {file = "partd-1.4.2-py3-none-any.whl", hash = "sha256:978e4ac767ec4ba5b86c6eaa52e5a2a3bc748a2ca839e8cc798f1cc6ce6efb0f"},
+    {file = "partd-1.4.2.tar.gz", hash = "sha256:d022c33afbdc8405c226621b015e8067888173d85f7f5ecebb3cafed9a20f02c"},
 ]
 
 [[package]]
@@ -1585,6 +1715,22 @@ files = [
 ]
 
 [[package]]
+name = "sparse"
+version = "0.15.4"
+requires_python = ">=3.8"
+summary = "Sparse n-dimensional arrays for the PyData ecosystem"
+groups = ["default"]
+dependencies = [
+    "numba>=0.49",
+    "numpy>=1.17",
+    "scipy>=0.19",
+]
+files = [
+    {file = "sparse-0.15.4-py2.py3-none-any.whl", hash = "sha256:76ec76fee2aee82a84eb97155dd530a9644e3b1fdea2406bc4b454698b36d938"},
+    {file = "sparse-0.15.4.tar.gz", hash = "sha256:d4b1c57d24ff0f64f2fd5b5a95b49b7fb84ed207a26d7d58ce2764dcc5c72b84"},
+]
+
+[[package]]
 name = "statsmodels"
 version = "0.14.1"
 requires_python = ">=3.8"
@@ -1665,6 +1811,17 @@ dependencies = [
 files = [
     {file = "tinycss2-1.2.1-py3-none-any.whl", hash = "sha256:2b80a96d41e7c3914b8cda8bc7f705a4d9c49275616e886103dd839dfc847847"},
     {file = "tinycss2-1.2.1.tar.gz", hash = "sha256:8cff3a8f066c2ec677c06dbc7b45619804a6938478d9d73c284b29d14ecb0627"},
+]
+
+[[package]]
+name = "toolz"
+version = "0.12.1"
+requires_python = ">=3.7"
+summary = "List processing tools and functional utilities"
+groups = ["default"]
+files = [
+    {file = "toolz-0.12.1-py3-none-any.whl", hash = "sha256:d22731364c07d72eea0a0ad45bafb2c2937ab6fd38a3507bf55eae8744aa7d85"},
+    {file = "toolz-0.12.1.tar.gz", hash = "sha256:ecca342664893f177a13dac0e6b41cbd8ac25a358e5f215316d43e2100224f4d"},
 ]
 
 [[package]]
@@ -1801,4 +1958,33 @@ dependencies = [
 files = [
     {file = "xarray-2024.3.0-py3-none-any.whl", hash = "sha256:ca2bc4da2bf2e7879e15862a7a7c3fc76ad19f6a08931d030220cef39a29118d"},
     {file = "xarray-2024.3.0.tar.gz", hash = "sha256:5c1db19efdde61db7faedad8fc944f4e29698fb6fbd578d352668b63598bd1d8"},
+]
+
+[[package]]
+name = "zarr"
+version = "2.18.2"
+requires_python = ">=3.9"
+summary = "An implementation of chunked, compressed, N-dimensional arrays for Python"
+groups = ["default"]
+dependencies = [
+    "asciitree",
+    "fasteners; sys_platform != \"emscripten\"",
+    "numcodecs>=0.10.0",
+    "numpy>=1.23",
+]
+files = [
+    {file = "zarr-2.18.2-py3-none-any.whl", hash = "sha256:a638754902f97efa99b406083fdc807a0e2ccf12a949117389d2a4ba9b05df38"},
+    {file = "zarr-2.18.2.tar.gz", hash = "sha256:9bb393b8a0a38fb121dbb913b047d75db28de9890f6d644a217a73cf4ae74f47"},
+]
+
+[[package]]
+name = "zipp"
+version = "3.19.2"
+requires_python = ">=3.8"
+summary = "Backport of pathlib-compatible object wrapper for zip files"
+groups = ["default"]
+marker = "python_version < \"3.12\""
+files = [
+    {file = "zipp-3.19.2-py3-none-any.whl", hash = "sha256:f091755f667055f2d02b32c53771a7a6c8b47e1fdbc4b72a8b9072b3eef8015c"},
+    {file = "zipp-3.19.2.tar.gz", hash = "sha256:bf1dcf6450f873a13e952a29504887c89e6de7506209e5b1bcc3460135d4de19"},
 ]

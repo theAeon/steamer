@@ -9,12 +9,14 @@ from pathlib import Path, PurePath
 import typer
 from typing_extensions import Annotated
 
+import numpy as np
 import pandas as pd
+import sparse
 from fuc import pybed
-from pybedtools import BedTool
+from pybedtools import BedTool, Interval
 from scipy.io import mmwrite
 from scipy.sparse import coo_matrix, csr_matrix
-from ALLCools.mcds import MCDS
+from dask import array as da
 
 app = typer.Typer()
 
@@ -126,6 +128,26 @@ def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Pat
         frag_bf_sort.to_file("Frag.bed")
 
     return frag_bf_sort
+
+def mangle_ids(line: Interval) -> Interval:
+        fam_name = line.fields[3]
+        TE_start, TE_end, chrom = (
+            line.fields[1],
+            line.fields[2],
+            line.fields[0],
+        )
+        TE_name_unique = f"{fam_name}({chrom}:{TE_start},{TE_end})"
+        line.name = TE_name_unique
+        return line
+
+@app.command()
+def mangle_bed_file_ids(bed: Path):
+    loaded_bed = BedTool(bed)
+    mangled_bed = loaded_bed.each(mangle_ids)
+    mangled_bed.saveas(bed.parent.joinpath(bed.stem + "_mangled" + bed.suffix))
+
+
+
 
 def make_cell_x_element_matrix(bed_intersect, cell_barcodes=None):
     # Initialize lists and dictionaries
@@ -290,6 +312,18 @@ def display_elapsed_time(start_time, p=True):
         print(f"Elapsed time: {hours} hours, {minutes} minutes, {seconds} seconds")
     elif p == False:
         return f"Elapsed time: {hours} hours, {minutes} minutes, {seconds} seconds"
+
+@app.command()
+def mc_fractions(mcds: Path):
+    open_mcds = da.from_zarr(mcds.as_posix(), "/TEs/TEs_da")
+    squeeze_mcds = da.squeeze(open_mcds)
+    mask_mcds = da.ma.masked_less(squeeze_mcds[:, :, 1], 10)
+    mask3d_mcds = da.stack([mask_mcds, mask_mcds], 2)
+    apply_mask = da.ma.masked_array(squeeze_mcds, mask=da.logical_not(mask3d_mcds))
+    divide_mcds = da.apply_along_axis(np.divide.reduce, 2, apply_mask)
+    nn_mcds = da.nan_to_num(divide_mcds)
+    spMCDS = nn_mcds.map_blocks(sparse.COO)
+    mmwrite(mcds.as_posix() + ".mtx", coo_matrix(spMCDS.compute().to_scipy_sparse()))
 
 @app.command()
 def run_analysis(bed_intersect: Path, sample_name: str, cell_barcodes: Annotated[Path, typer.Argument()]):
