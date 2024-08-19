@@ -314,10 +314,10 @@ def display_elapsed_time(start_time, p=True):
         return f"Elapsed time: {hours} hours, {minutes} minutes, {seconds} seconds"
 
 @app.command()
-def mc_fractions(mcds: Path):
+def mc_fractions(mcds: Path, threshold: int):
     open_mcds = da.from_zarr(mcds.as_posix(), "/TEs/TEs_da")
     squeeze_mcds = da.squeeze(open_mcds)
-    mask_mcds = da.ma.masked_less(squeeze_mcds[:, :, 1], 10)
+    mask_mcds = da.ma.masked_less(squeeze_mcds[:, :, 1], threshold)
     mask3d_mcds = da.stack([mask_mcds, mask_mcds], 2)
     apply_mask = da.ma.masked_array(squeeze_mcds, mask=da.logical_not(mask3d_mcds))
     divide_mcds = da.apply_along_axis(np.divide.reduce, 2, apply_mask)
