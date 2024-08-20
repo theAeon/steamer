@@ -1,0 +1,8 @@
+{
+  "run_full.full_index": "File",
+  "run_full.full_t2gs": "File",
+  "run_full.full_fastqs": "Array[File]",
+  "run_full.fullin_sample_name": "String",
+  "run_full.memory_GB": "Int"
+}
+

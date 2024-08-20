@@ -1,8 +1,9 @@
 version: 1.2
 workflows:
     - subclass: WDL
-      primaryDescriptorPath: /steamer.wdl  # absolute path
-      testParameterFiles: [/steamer_inputs.json]  # absolute path
+      name: STEAMER-ATACseq
+      primaryDescriptorPath: /steamer-atac.wdl  # absolute path
+      testParameterFiles: [/steamer_atac_inputs.json]  # absolute path
       readMePath: /README.md # absolute path
       authors:
           - name: Andrew Robbins
@@ -10,4 +11,16 @@ workflows:
             orcid: 0009-0001-7961-7489
           - name: Crystal Wen
             email: mccwen@umich.edu
-      topic: The welch-lab STEAMER pipeline
+      topic: The welch-lab STEAMER pipeline for ATAC-seq
+    - subclass: WDL
+      name: STEAMER-RNAseq
+      primaryDescriptorPath: /steamer-rna.wdl  # absolute path
+      testParameterFiles: [/steamer_rna_inputs.json]  # absolute path
+      readMePath: /README.md # absolute path
+      authors:
+          - name: Andrew Robbins
+            email: robbiand@med.umich.edu
+            orcid: 0009-0001-7961-7489
+          - name: Crystal Wen
+            email: mccwen@umich.edu
+      topic: The welch-lab STEAMER pipeline for RNA-seq
