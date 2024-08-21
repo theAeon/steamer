@@ -24,3 +24,15 @@ workflows:
           - name: Crystal Wen
             email: mccwen@umich.edu
       topic: The welch-lab STEAMER pipeline for RNA-seq
+    - subclass: WDL
+      name: STEAMER-mCseq
+      primaryDescriptorPath: /steamer-methyl.wdl  # absolute path
+      testParameterFiles: [/steamer_methyl_inputs.json]  # absolute path
+      readMePath: /README.md # absolu te path
+      authors:
+          - name: Andrew Robbins
+            email: robbiand@med.umich.edu
+            orcid: 0009-0001-7961-7489
+          - name: Crystal Wen
+            email: mccwen@umich.edu
+      topic: The welch-lab STEAMER pipeline for mCseq
