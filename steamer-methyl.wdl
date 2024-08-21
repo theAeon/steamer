@@ -8,4 +8,12 @@ workflow run_full {
     String fullin_sample_name
     Int memory_GB
   }
+    parameter_meta {
+      fullin_TEs: "Path to bed file containing TEs"
+      allcs: "terra table column containing location of 'allc_*.tsv.gz'"
+      allcs_idx: "terra table column containing location of 'allc.tsv.idx'"
+      chrom_size: "Path to chrom.sizes obtained by UCSC fetchChromSizes.sh"
+      fullin_sample_name: "name of sample"
+      memory_GB: "memory, in gigabytes"
+  }
 }
