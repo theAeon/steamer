@@ -8,6 +8,8 @@ workflow run_full {
     File chrom_size
     String fullin_sample_name
     Int memory_GB
+    Int nCPUs
+    Float threshold_QC
   }
     parameter_meta {
       fullin_TEs: "Path to bed file containing TEs"
@@ -17,11 +19,30 @@ workflow run_full {
       chrom_size: "Path to chrom.sizes obtained by UCSC fetchChromSizes.sh"
       fullin_sample_name: "name of sample"
       memory_GB: "memory, in gigabytes"
+      nCPUs: "CPUs for parallel execution"
+      threshold_QC: "Threshold for discarding methylation fraction"
   }
   call mangle_bed {
     input:
       bed = fullin_TEs,
       mem = memory_GB
+  }
+  call generate_dataset {
+    input:
+        fileIDs = file_id,
+        allc_list = allcs,
+        SampleName = fullin_sample_name,
+        nCPU = floor(nCPUs*0.75),
+        mangledTEs = mangle_bed.bed_mangled,
+        chromSize = chrom_size,
+        mem = memory_GB
+  }
+  call calculate_fractions {
+    input:
+        tempzarr = generate_dataset.zarrTar,
+        SampleName = fullin_sample_name,
+        mem = memory_GB,
+        threshold = threshold_QC
   }
 }
 
@@ -75,7 +96,7 @@ task calculate_fractions {
         File tempzarr
         String SampleName
         Int mem
-        Int threshold
+        Float threshold
     }
     command <<<
     tar -xf ~{tempzarr}; \
