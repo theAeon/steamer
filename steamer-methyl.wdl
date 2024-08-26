@@ -42,33 +42,18 @@ task mangle_bed {
   }
 }
 
-task make_tsv {
+task generate_dataset {
     input {
         Array[String] fileIDs
         Array[File]   allc_list
-        Int           mem
-    }
-    command <<<
-
-    >>>
-    output {
-        File allc_tsv = "/allc_table.tsv"
-    }
-    runtime {
-        docker: "ghcr.io/welch-lab/steamer:latest"
-        memory: mem + "GB"
-  }
-}
-
-task generate_dataset {
-    input {
-        File allc_table
         String SampleName
         Int nCPU
         File mangledTEs
         File chromSize
         Int mem
     }
+    Array[Array[String]] tsvPair = [fileIDs, allc_list]
+    File allc_table = write_tsv(tsvPair)
     command <<<
     allcools generate-dataset --allc_table ~{allc_table} --output_path=~{SampleName}.mcds --obs_dim cell \
     --cpu ~{nCPU} --chunk 50 --regions TEs ~{mangledTEs} --chrom_size_path ~{chromSize} \
@@ -85,7 +70,7 @@ task generate_dataset {
     }
 }
 
-task calcuate_fractions {
+task calculate_fractions {
     input {
         File tempzarr
         String SampleName
