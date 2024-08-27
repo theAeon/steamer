@@ -83,7 +83,7 @@ task generate_dataset {
     >>>
     output {
 #this should be a Directory but cromwell doesn't support WDL 1.2
-        File zarrTar = "/tempzarr.tar"
+        File zarrTar = "tempzarr.tar"
     }
     runtime {
       docker: "ghcr.io/welch-lab/steamer:latest"
