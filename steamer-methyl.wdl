@@ -74,7 +74,7 @@ task generate_dataset {
         File chromSize
         Int mem
     }
-    Int nCPUscale = floor(nCPUs*0.75)
+    Int nCPUscale = floor(nCPU*0.75)
     Array[Array[String]] tsvPair = [fileIDs, allc_list]
     File allc_table = write_tsv(tsvPair)
     command <<<
