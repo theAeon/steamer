@@ -52,11 +52,12 @@ task mangle_bed {
         File bed
         Int mem
     }
+    File bed_mangled_suffix = basename(bed, ".bed") + "_mangled.bed"
     command <<<
       run_steamer mangle-bed-file-ids ~{bed}
     >>>
     output {
-        File bed_mangled = basename(bed, ".bed") + "_mangled.bed"
+        File bed_mangled = sub(bed, basename(bed, ".bed"), bed_mangled_suffix)
     }
     runtime {
     docker: "ghcr.io/welch-lab/steamer:latest"
