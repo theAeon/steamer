@@ -52,7 +52,7 @@ task mangle_bed {
         File bed
         Int mem
     }
-    File bed_mangled_suffix = basename(bed, ".bed") + "_mangled.bed"
+    String bed_mangled_suffix = basename(bed, ".bed") + "_mangled.bed"
     command <<<
       run_steamer mangle-bed-file-ids ~{bed}
     >>>
