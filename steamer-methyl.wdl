@@ -33,7 +33,7 @@ workflow run_full {
         fileIDs = file_id,
         allc_list = allcs,
         SampleName = fullin_sample_name,
-        nCPU = floor(nCPUs*0.75),
+        nCPU = nCPUs,
         mangledTEs = mangle_bed.bed_mangled,
         chromSize = chrom_size,
         mem = memory_GB
@@ -74,11 +74,12 @@ task generate_dataset {
         File chromSize
         Int mem
     }
+    Int nCPUscale = floor(nCPUs*0.75)
     Array[Array[String]] tsvPair = [fileIDs, allc_list]
     File allc_table = write_tsv(tsvPair)
     command <<<
     allcools generate-dataset --allc_table ~{allc_table} --output_path=~{SampleName}.mcds --obs_dim cell \
-    --cpu ~{nCPU} --chunk 50 --regions TEs ~{mangledTEs} --chrom_size_path ~{chromSize} \
+    --cpu ~{nCPUscale} --chunk 50 --regions TEs ~{mangledTEs} --chrom_size_path ~{chromSize} \
     --quantifiers TEs count CHN; tar -cf tempzarr.tar ~{SampleName}.mcds
     >>>
     output {
@@ -88,7 +89,9 @@ task generate_dataset {
     runtime {
       docker: "ghcr.io/welch-lab/steamer:latest"
       memory: mem + "GB"
-      #cores?
+      cpu: nCPUs
+      disks: local-disk 375 LOCAL
+      
     }
 }
 
