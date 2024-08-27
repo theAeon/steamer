@@ -6,18 +6,19 @@ workflow run_full {
     Array[File] allcs
     Array[File] allcs_idx
     File chrom_size
-    String fullin_sample_name
+    Array[String] fullin_sample_name_column
     Int memory_GB
     Int nCPUs
     Float threshold_QC
   }
+  String fullin_sample_name = fullin_sample_name_column[0]
     parameter_meta {
       fullin_TEs: "Path to bed file containing TEs"
       file_id: "terra table column containing file IDs"
       allcs: "terra table column containing location of 'allc_*.tsv.gz'"
       allcs_idx: "terra table column containing location of 'allc.tsv.idx'"
       chrom_size: "Path to chrom.sizes obtained by UCSC fetchChromSizes.sh"
-      fullin_sample_name: "name of sample"
+      fullin_sample_name_column: "name of sample"
       memory_GB: "memory, in gigabytes"
       nCPUs: "CPUs for parallel execution"
       threshold_QC: "Threshold for discarding methylation fraction"
