@@ -75,7 +75,8 @@ task generate_dataset {
         Int mem
     }
     Int nCPUscale = floor(nCPU*0.75)
-    Array[Pair[String, File]] tsvPaired = zip(fileIDs, allc_list)
+    Array[Array[String]] initial_paired = [fileIDs, allc_list]
+    Array[Array[String]] tsvPaired = transpose(initial_paired)
     File allc_table = write_tsv(tsvPaired)
     command <<<
     allcools generate-dataset --allc_table ~{allc_table} --output_path=~{SampleName}.mcds --obs_dim cell \
