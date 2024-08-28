@@ -141,10 +141,10 @@ def mangle_ids(line: Interval) -> Interval:
         return line
 
 @app.command()
-def mangle_bed_file_ids(bed: Path):
+def mangle_bed_file_ids(bed: Path, out: Path):
     loaded_bed = BedTool(bed)
     mangled_bed = loaded_bed.each(mangle_ids)
-    mangled_bed.saveas(bed.parent.joinpath(bed.stem + "_mangled" + bed.suffix))
+    mangled_bed.saveas(out)
 
 
 

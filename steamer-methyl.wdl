@@ -52,11 +52,12 @@ task mangle_bed {
         File bed
         Int mem
     }
+    File mangled_bed = "TEs_mangled.bed"
     command <<<
-      run_steamer mangle-bed-file-ids ~{bed}
+      run_steamer mangle-bed-file-ids ~{bed} ~{mangled_bed}
     >>>
     output {
-        File bed_mangled = sub(bed, "\\.bed$", "_mangled.bed")
+        File bed_mangled = mangled_bed
     }
     runtime {
     docker: "ghcr.io/welch-lab/steamer:latest"
@@ -91,7 +92,7 @@ task generate_dataset {
       memory: mem + "GB"
       cpu: nCPU
       disks: "local-disk 375 LOCAL"
-      
+
     }
 }
 
