@@ -2,7 +2,7 @@ FROM python:3.12-bookworm
 
 LABEL org.opencontainers.image.source=https://github.com/welch-lab/steamer
 
-RUN apt-get update && apt-get install bedtools libhdf5-dev tabix -y
+RUN apt-get update && apt-get upgrade -y && apt-get install bedtools libhdf5-dev tabix -y
 
 COPY requirements.txt /src/
 
