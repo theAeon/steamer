@@ -85,6 +85,7 @@ task generate_dataset {
     Array[Array[String]] tsvPaired = transpose(initial_paired)
     File allc_table = write_tsv(tsvPaired)
     command <<<
+    CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
     allcools generate-dataset --allc_table ~{allc_table} --output_path=~{SampleName}.mcds --obs_dim cell \
     --cpu ~{nCPUscale} --chunk 50 --regions TEs ~{mangledTEs} --chrom_size_path ~{chromSize} \
     --quantifiers TEs count CHN; tar -cf tempzarr.tar ~{SampleName}.mcds
