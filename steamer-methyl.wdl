@@ -86,6 +86,7 @@ task generate_dataset {
     File allc_table = write_tsv(tsvPaired)
     command <<<
     CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
+    GCS_REQUESTER_PAYS_PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google") \
     allcools generate-dataset --allc_table ~{allc_table} --output_path=~{SampleName}.mcds --obs_dim cell \
     --cpu ~{nCPUscale} --chunk 50 --regions TEs ~{mangledTEs} --chrom_size_path ~{chromSize} \
     --quantifiers TEs count CHN; tar -cf tempzarr.tar ~{SampleName}.mcds
