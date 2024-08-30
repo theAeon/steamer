@@ -80,7 +80,7 @@ task generate_dataset {
             localization_optional: true
         }
     }
-    Int nCPUscale = floor(nCPU*0.75)
+    Int nCPUscale = ceil(nCPU*0.75)
     Array[Array[String]] initial_paired = [fileIDs, allc_list]
     Array[Array[String]] tsvPaired = transpose(initial_paired)
     File allc_table = write_tsv(tsvPaired)
