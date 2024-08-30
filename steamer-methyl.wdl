@@ -9,7 +9,7 @@ workflow run_full {
     Array[String] fullin_sample_name_column
     Int memory_GB
     Int nCPUs
-    Float threshold_QC
+    Int threshold_QC
   }
   String fullin_sample_name = fullin_sample_name_column[0]
     parameter_meta {
@@ -21,7 +21,7 @@ workflow run_full {
       fullin_sample_name_column: "name of sample"
       memory_GB: "memory, in gigabytes"
       nCPUs: "CPUs for parallel execution"
-      threshold_QC: "Threshold for discarding methylation fraction"
+      threshold_QC: "Threshold for discarding methylation value"
   }
   call mangle_bed {
     input:
