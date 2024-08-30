@@ -4,7 +4,6 @@ workflow run_full {
     File fullin_TEs
     Array[String] file_id
     Array[File] allcs
-    Array[File] allcs_idx
     File chrom_size
     Array[String] fullin_sample_name_column
     Int memory_GB
@@ -16,7 +15,6 @@ workflow run_full {
       fullin_TEs: "Path to bed file containing TEs"
       file_id: "terra table column containing file IDs"
       allcs: "terra table column containing location of 'allc_*.tsv.gz'"
-      allcs_idx: "terra table column containing location of 'allc.tsv.idx'"
       chrom_size: "Path to chrom.sizes obtained by UCSC fetchChromSizes.sh"
       fullin_sample_name_column: "name of sample"
       memory_GB: "memory, in gigabytes"
