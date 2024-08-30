@@ -5,12 +5,15 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:a640757c53d13f6f91b1e3130606888d3292e960ded9bd625eadd8df97469cc0"
+content_hash = "sha256:70b5ebdda4546a55f38d141af03a71dd3ae34b2563b21fcd860db7edd33b667f"
 
 [[package]]
 name = "allcools"
 version = "1.1.0"
 requires_python = ">=3.7"
+git = "https://github.com/theAeon/ALLCools"
+ref = "tabix-create"
+revision = "0ed871020dc09b9824aa210ed82646d58ca7731c"
 summary = "Toolkit for single-cell DNA methylome and multiomic data analysis."
 groups = ["default"]
 dependencies = [
@@ -25,10 +28,6 @@ dependencies = [
     "pyyaml",
     "seaborn",
     "xarray",
-]
-files = [
-    {file = "allcools-1.1.0-py3-none-any.whl", hash = "sha256:34b5d20836bd3d01d322e36d8c9cf0095464dd46b0945c51c6a27a9aa5b10776"},
-    {file = "allcools-1.1.0.tar.gz", hash = "sha256:e91aa62b8d499be03ce43bacefbcb6d704bf179d81bdb97a7f08e6ea28a4bcc9"},
 ]
 
 [[package]]

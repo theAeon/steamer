@@ -13,10 +13,10 @@ dependencies = [
     "setuptools>=69.1.1",
     "typer>=0.9.0",
     "kb-python",
-    "ALLCools>=1.1.0",
+    "allcools @ git+https://github.com/theAeon/ALLCools@tabix-create",
     "dask>=2024.6.2",
     "zarr>=2.18.2",
-    "sparse>=0.15.4"
+    "sparse>=0.15.4",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
