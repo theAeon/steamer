@@ -110,7 +110,7 @@ task calculate_fractions {
         File tempzarr
         String SampleName
         Int mem
-        Float threshold
+        Int threshold
     }
     command <<<
     tar -xf ~{tempzarr}; \
