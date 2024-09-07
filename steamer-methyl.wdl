@@ -43,6 +43,9 @@ workflow run_full {
         mem = memory_GB,
         threshold = threshold_QC
   }
+  output {
+    File mtx = calculate_fractions.count_mat
+  }
 }
 
 task mangle_bed {
