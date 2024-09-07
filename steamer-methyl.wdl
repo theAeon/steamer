@@ -82,7 +82,7 @@ task generate_dataset {
         }
     }
     Int nCPUscale = ceil(nCPU*0.75)
-    Int disk = size(allc_list, "G") + 375
+    Int disk = ceil(size(allc_list, "G")) + 375
     Array[Array[String]] initial_paired = [fileIDs, allc_list]
     Array[Array[String]] tsvPaired = transpose(initial_paired)
     File allc_table = write_tsv(tsvPaired)
