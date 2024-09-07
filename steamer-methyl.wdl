@@ -82,6 +82,7 @@ task generate_dataset {
         }
     }
     Int nCPUscale = ceil(nCPU*0.75)
+    Int disk = size(allc_list, "G") + 375
     Array[Array[String]] initial_paired = [fileIDs, allc_list]
     Array[Array[String]] tsvPaired = transpose(initial_paired)
     File allc_table = write_tsv(tsvPaired)
@@ -101,7 +102,7 @@ task generate_dataset {
       docker: "ghcr.io/welch-lab/steamer:latest"
       memory: mem + "GB"
       cpu: nCPU
-      disks: "local-disk" +  size(allc_list) + 375 + "LOCAL"
+      disks: "local-disk " + disk + " LOCAL"
     }
 }
 
