@@ -98,8 +98,7 @@ task generate_dataset {
       docker: "ghcr.io/welch-lab/steamer:latest"
       memory: mem + "GB"
       cpu: nCPU
-      disks: "local-disk 375 LOCAL"
-
+      disks: "local-disk" +  size(allc_list) + 375 + "LOCAL"
     }
 }
 
