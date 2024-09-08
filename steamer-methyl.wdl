@@ -4,6 +4,7 @@ workflow run_full {
     File fullin_TEs
     Array[String] file_id
     Array[File] allcs
+    Array[Int]  size_col
     File chrom_size
     Array[String] fullin_sample_name_column
     Int memory_GB
@@ -15,11 +16,16 @@ workflow run_full {
       fullin_TEs: "Path to bed file containing TEs"
       file_id: "terra table column containing file IDs"
       allcs: "terra table column containing location of 'allc_*.tsv.gz'"
+      size_col: "terra column containing sizes of allc files"
       chrom_size: "Path to chrom.sizes obtained by UCSC fetchChromSizes.sh"
       fullin_sample_name_column: "name of sample"
       memory_GB: "memory, in gigabytes"
       nCPUs: "CPUs for parallel execution"
       threshold_QC: "Threshold for discarding methylation value"
+  }
+  call sum {
+    input:
+      sizes = size_col
   }
   call mangle_bed {
     input:
@@ -32,6 +38,7 @@ workflow run_full {
         allc_list = allcs,
         SampleName = fullin_sample_name,
         nCPU = nCPUs,
+        DiskSize = sum.size,
         mangledTEs = mangle_bed.bed_mangled,
         chromSize = chrom_size,
         mem = memory_GB
@@ -71,6 +78,7 @@ task generate_dataset {
         Array[File]   allc_list
         String SampleName
         Int nCPU
+        Int DiskSize
         File mangledTEs
         File chromSize
         Int mem
@@ -82,7 +90,7 @@ task generate_dataset {
         }
     }
     Int nCPUscale = ceil(nCPU*0.75)
-    Int disk = ceil(size(allc_list, "G")) + 375
+    Int disk = DiskSize + 375
     String disk_string = "local-disk " + disk + " LOCAL"
     Array[Array[String]] initial_paired = [fileIDs, allc_list]
     Array[Array[String]] tsvPaired = transpose(initial_paired)
@@ -124,5 +132,20 @@ task calculate_fractions {
     runtime {
         docker: "ghcr.io/welch-lab/steamer:latest"
         memory: mem + "GB"
+  }
+}
+
+
+task sum {
+  input {
+    Array[Int] sizes
+  }
+  command <<<
+  python3 <<CODE
+  print(sum(~{sep=',' sizes})<<30)
+  CODE
+  >>>
+  output {
+    Int size = celi(stdout())
   }
 }
