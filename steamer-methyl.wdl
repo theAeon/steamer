@@ -142,7 +142,7 @@ task sum {
   }
   command <<<
   python3 <<CODE
-  print(sum([~{sep=',' sizes}])<<30)
+  print(sum([~{sep=',' sizes}])>>30)
   CODE
   >>>
   output {
