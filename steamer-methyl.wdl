@@ -149,6 +149,6 @@ task sum {
     Int size = ceil(read_float(stdout()))
   }
   runtime {
-    docker: "python:alpine3.19"
+    docker: "python:3.12"
   }
 }
