@@ -146,6 +146,6 @@ task sum {
   CODE
   >>>
   output {
-    Int size = ceil(stdout())
+    Int size = ceil(read_float(stdout()))
   }
 }
