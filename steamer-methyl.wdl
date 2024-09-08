@@ -146,6 +146,6 @@ task sum {
   CODE
   >>>
   output {
-    Int size = celi(stdout())
+    Int size = ceil(stdout())
   }
 }
