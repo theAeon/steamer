@@ -98,7 +98,7 @@ task generate_dataset {
     command <<<
     CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
     GCS_REQUESTER_PAYS_PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google") \
-    GCS_OAUTH_TOKEN=$(gcloud auth application-default print-access-token --lifetime=43200) \
+    GCS_OAUTH_TOKEN=$(gcloud auth application-default print-access-token --lifetime=43200  --impersonate-service-account=$GCS_REQUESTER_PAYS_PROJECT-compute@developer.gserviceaccount.com) \
     allcools generate-dataset --allc_table ~{allc_table} --output_path=~{SampleName}.mcds --obs_dim cell \
     --cpu ~{nCPUscale} --chunk 50 --regions TEs ~{mangledTEs} --chrom_size_path ~{chromSize} \
     --quantifiers TEs count CHN; tar -cf tempzarr.tar ~{SampleName}.mcds
