@@ -17,6 +17,7 @@ dependencies = [
     "dask>=2024.6.2",
     "zarr>=2.18.2",
     "sparse>=0.15.4",
+    "pysam @ git+https://github.com/theAeon/pysam.git@gcloud_auth",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
