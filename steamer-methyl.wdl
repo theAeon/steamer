@@ -86,7 +86,7 @@ task generate_dataset {
     parameter_meta {
         allc_list: {
             description: "erra table column containing location of 'allc_*.tsv.gz",
-            localization_optional: true
+            #localization_optional: true
         }
     }
     Int nCPUscale = ceil(nCPU*0.75)
