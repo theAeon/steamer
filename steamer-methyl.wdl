@@ -85,7 +85,7 @@ task generate_dataset {
     }
     parameter_meta {
         allc_list: {
-            description: "erra table column containing location of 'allc_*.tsv.gz",
+            description: "Terra table column containing location of 'allc_*.tsv.gz",
             #localization_optional: true
         }
     }
@@ -96,9 +96,10 @@ task generate_dataset {
     Array[Array[String]] tsvPaired = transpose(initial_paired)
     File allc_table = write_tsv(tsvPaired)
     command <<<
-    CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
-    GCS_REQUESTER_PAYS_PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google") \
-    GCS_OAUTH_TOKEN=$(gcloud auth application-default print-access-token) \
+    #CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt \
+    #GCS_REQUESTER_PAYS_PROJECT=$(curl -s "http://metadata.google.internal/computeMetadata/v1/project/project-id" -H "Metadata-Flavor: Google") \
+    #GCS_OAUTH_TOKEN=$(gcloud auth application-default print-access-token) \
+    sed -i 's;gs://;/cromwell_root/;g' ~{allc_table}; \
     allcools generate-dataset --allc_table ~{allc_table} --output_path=~{SampleName}.mcds --obs_dim cell \
     --cpu ~{nCPUscale} --chunk 50 --regions TEs ~{mangledTEs} --chrom_size_path ~{chromSize} \
     --quantifiers TEs count CHN; tar -cf tempzarr.tar ~{SampleName}.mcds
