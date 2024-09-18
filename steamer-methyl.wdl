@@ -102,7 +102,7 @@ task generate_dataset {
     sed -i 's;gs://;/cromwell_root/;g' ~{allc_table}; \
     allcools generate-dataset --allc_table ~{allc_table} --output_path=~{SampleName}.mcds --obs_dim cell \
     --cpu ~{nCPUscale} --chunk 50 --regions TEs ~{mangledTEs} --chrom_size_path ~{chromSize} \
-    --quantifiers TEs count CHN; tar -cf tempzarr.tar ~{SampleName}.mcds
+    --quantifiers TEs count CGN,CHN; tar -cf tempzarr.tar ~{SampleName}.mcds
     >>>
     output {
 #this should be a Directory but cromwell doesn't support WDL 1.2
