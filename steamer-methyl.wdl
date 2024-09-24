@@ -51,7 +51,10 @@ workflow run_full {
         threshold = threshold_QC
   }
   output {
-    File mtx = calculate_fractions.count_mat
+    File mtx_ch = calculate_fractions.count_mat_ch
+    File mtx_cg = calculate_fractions.count_mat_cg
+    File methyl_tar = calculate_fractions.count_tar
+
   }
 }
 
