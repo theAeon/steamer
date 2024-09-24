@@ -125,10 +125,13 @@ task calculate_fractions {
     }
     command <<<
     tar -xf ~{tempzarr}; \
-    run_steamer mc-fractions ~{SampleName}.mcds ~{threshold}
+    run_steamer mc-fractions ~{SampleName}.mcds ~{threshold}; \
+    tar -cf fracZarr.tar TEs_frac.mcds
     >>>
     output {
-        File count_mat = SampleName + ".mcds.mtx"
+        File count_mat_ch = SampleName + ".mcds.ch.mtx"
+        File count_mat_cg = SampleName + ".mcds.cg.mtx"
+        File count_tar    = "fracZarr.tar"
     }
     runtime {
         docker: "ghcr.io/welch-lab/steamer:latest"
