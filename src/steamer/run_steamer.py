@@ -6,13 +6,17 @@ import time
 from collections import defaultdict
 
 from pathlib import Path, PurePath
+from pandas import DataFrame
+from pandas.io.parsers.readers import TextFileReader
 import typer
 from typing_extensions import Annotated
 
+from ALLCools.mcds import MCDS
 import numpy as np
 import pandas as pd
 import sparse
 from fuc import pybed
+import pybedtools
 from pybedtools import BedTool, Interval
 from scipy.io import mmwrite
 from scipy.sparse import coo_matrix, csr_matrix
@@ -315,15 +319,47 @@ def display_elapsed_time(start_time, p=True):
 
 @app.command()
 def mc_fractions(mcds: Path, threshold: int):
-    open_mcds = da.from_zarr(mcds.as_posix(), "/TEs/TEs_da")
-    squeeze_mcds = da.squeeze(open_mcds)
-    mask_mcds = da.ma.masked_less(squeeze_mcds[:, :, 1], threshold)
-    mask3d_mcds = da.stack([mask_mcds, mask_mcds], 2)
-    apply_mask = da.ma.masked_array(squeeze_mcds, mask=da.logical_not(mask3d_mcds))
-    divide_mcds = da.apply_along_axis(np.divide.reduce, 2, apply_mask)
-    nn_mcds = da.nan_to_num(divide_mcds)
-    spMCDS = nn_mcds.map_blocks(sparse.COO)
-    mmwrite(mcds.as_posix() + ".mtx", coo_matrix(spMCDS.compute().to_scipy_sparse()))
+    #chrom_to_remove = ["chrM"]
+    #genes_to_skip = set()
+    #gene_meta = pd.read_csv(filepath_or_buffer=meta, header='infer', index_col='gene_id', sep='\t')
+    #gene_bed = pybedtools.BedTool.from_dataframe(
+    #    gene_meta.reset_index()[['chrom', 'start', 'end', 'gene_id']])    # skip smaller genes mostly covered by a larger gene, e.g., a miRNA within a protein coding gene.
+    # F=0.9 means > 90% of gene_b is overlapped with gene_a, in this case, we only keep gene_a for DMG test
+    #mapped_bam = gene_bed.map(b=gene_bed, c=4, o='distinct', F=0.9)
+    #for _, (*_, gene_a, gene_b_str) in mapped_bam.to_dataframe().iterrows():
+    #    for gene_b in gene_b_str.split(','):
+    #        if gene_b != gene_a:
+    #            genes_to_skip.add(gene_b)
+
+    # remove certain chromosomes
+    #genes_to_skip |= set(gene_meta.index[gene_meta['chrom'].isin(chrom_to_remove)])
+    #use_features = gene_meta.index[~gene_meta.index.isin(genes_to_skip)]
+    #print(f'{use_features.size} features remained')
+    open_mcds = MCDS.open(mcds.as_posix(), var_dim="TEs")
+    #this is broken?
+    #open_mcds.add_feature_cov_mean()
+    feature_cov_mean = open_mcds["TEs_da"].sel(count_type="cov").sum(dim="mc_type").mean(dim="cell").squeeze().to_pandas()
+    open_mcds["TEs_cov_mean"] = feature_cov_mean
+    open_mcds = open_mcds.set_coords("TEs_cov_mean")
+    #use_features = use_features.intersection(feature_cov_mean[feature_cov_mean > threshold].index)
+    #print(f"{use_features.size} features remained")
+    open_mcds.filter_feature_by_cov_mean(min_cov=threshold)
+    open_mcds.add_mc_frac(normalize_per_cell=True, clip_norm_value=10)
+    open_mcds = open_mcds[['TEs_da_frac']]
+    open_mcds['TEs_da_frac'] = open_mcds['TEs_da_frac'].astype('float32')
+    open_mcds.write_dataset("TEs_frac.mcds")
+    #squeeze_mcds = da.squeeze(open_mcds)
+    #mask_mcds = da.ma.masked_less(squeeze_mcds[:, :, 1], threshold)
+    #mask3d_mcds = da.stack([mask_mcds, mask_mcds], 2)
+    #apply_mask = da.ma.masked_array(squeeze_mcds, mask=da.logical_not(mask3d_mcds))
+    #divide_mcds = da.apply_along_axis(np.divide.reduce, 2, apply_mask)
+    #nn_mcds = da.nan_to_num(divide_mcds)
+    spMCDSCH = open_mcds["TEs_da_frac"].sel(mc_type="CHN").data.map_blocks(sparse.COO)
+    spMCDSCG = open_mcds["TEs_da_frac"].sel(mc_type="CGN").data.map_blocks(sparse.COO)
+
+    mmwrite(mcds.as_posix() + ".ch.mtx", coo_matrix(spMCDSCH.compute().to_scipy_sparse()))
+    mmwrite(mcds.as_posix() + ".cg.mtx", coo_matrix(spMCDSCG.compute().to_scipy_sparse()))
+
 
 @app.command()
 def run_analysis(bed_intersect: Path, sample_name: str, cell_barcodes: Annotated[Path, typer.Argument()]):
