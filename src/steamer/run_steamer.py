@@ -6,21 +6,16 @@ import time
 from collections import defaultdict
 
 from pathlib import Path, PurePath
-from pandas import DataFrame
-from pandas.io.parsers.readers import TextFileReader
 import typer
 from typing_extensions import Annotated
 
 from ALLCools.mcds import MCDS
-import numpy as np
 import pandas as pd
 import sparse
 from fuc import pybed
-import pybedtools
 from pybedtools import BedTool, Interval
 from scipy.io import mmwrite
 from scipy.sparse import coo_matrix, csr_matrix
-from dask import array as da
 
 app = typer.Typer()
 
@@ -311,10 +306,10 @@ def display_elapsed_time(start_time, p=True):
     hours = int(elapsed_time_seconds // 3600)
     minutes = int((elapsed_time_seconds % 3600) // 60)
     seconds = int(elapsed_time_seconds % 60)
-    if p == True:
+    if p:
         # Print the elapsed time
         print(f"Elapsed time: {hours} hours, {minutes} minutes, {seconds} seconds")
-    elif p == False:
+    elif not p:
         return f"Elapsed time: {hours} hours, {minutes} minutes, {seconds} seconds"
 
 @app.command()
