@@ -56,7 +56,7 @@ task run_rna {
       File mtx = SampleName + "/counts_unfiltered/cells_x_genes.mtx"
     }
   runtime {
-    docker: "ghcr.io/welch-lab/steamer:latest"
+    docker: "us-central1-docker.pkg.dev/cobalt-entropy-358220/welch-lab/steamer:latest"
     memory: mem + "GB"
     disks: "local-disk 50 SSD"
   }
