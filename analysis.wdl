@@ -48,7 +48,7 @@ task run_analysis {
     File FamBar = "TE_Fam_matrix_" + sample_name + "/barcodes.tsv.gz"
   }
   runtime {
-    docker: "us-central1-docker.pkg.dev/cobalt-entropy-358220/welch-lab/steamer:latest"
+    docker: "quay.io/welch-lab/steamer:latest"
     memory: mem + "GB"
   }
 }

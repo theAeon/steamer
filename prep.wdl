@@ -45,7 +45,7 @@ task make_bedfiles {
       File outTEs = "TEs.bed"
     }
   runtime {
-    docker: "us-central1-docker.pkg.dev/cobalt-entropy-358220/welch-lab/steamer:latest"
+    docker: "quay.io/welch-lab/steamer:latest"
     memory: mem + "GB"
   }
 }
@@ -63,7 +63,7 @@ task intersect_bedfiles {
     File intersected = "bed_intersect.bed"
   }
     runtime {
-    docker: "us-central1-docker.pkg.dev/cobalt-entropy-358220/welch-lab/steamer:latest"
+    docker: "quay.io/welch-lab/steamer:latest"
     memory: mem + "GB"
   }
 }

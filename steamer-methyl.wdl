@@ -70,7 +70,7 @@ task mangle_bed {
         File bed_mangled = "TEs_mangled.bed"
     }
     runtime {
-    docker: "us-central1-docker.pkg.dev/cobalt-entropy-358220/welch-lab/steamer:latest"
+    docker: "quay.io/welch-lab/steamer:latest"
     memory: mem + "GB"
   }
 }
@@ -112,7 +112,7 @@ task generate_dataset {
         File zarrTar = "tempzarr.tar"
     }
     runtime {
-      docker: "us-central1-docker.pkg.dev/cobalt-entropy-358220/welch-lab/steamer:latest"
+      docker: "quay.io/welch-lab/steamer:latest"
       memory: mem + "GB"
       cpu: nCPU
       disks: disk_string
@@ -137,7 +137,7 @@ task calculate_fractions {
         File count_tar    = "fracZarr.tar"
     }
     runtime {
-        docker: "us-central1-docker.pkg.dev/cobalt-entropy-358220/welch-lab/steamer:latest"
+        docker: "quay.io/welch-lab/steamer:latest"
         memory: mem + "GB"
   }
 }
