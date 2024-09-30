@@ -315,28 +315,7 @@ def display_elapsed_time(start_time, p=True):
 
 @app.command()
 def mc_fractions(mcds: Path, threshold: int):
-    #chrom_to_remove = ["chrM"]
-    #genes_to_skip = set()
-    #gene_meta = pd.read_csv(filepath_or_buffer=meta, header='infer', index_col='gene_id', sep='\t')
-    #gene_bed = pybedtools.BedTool.from_dataframe(
-    #    gene_meta.reset_index()[['chrom', 'start', 'end', 'gene_id']])    # skip smaller genes mostly covered by a larger gene, e.g., a miRNA within a protein coding gene.
-    # F=0.9 means > 90% of gene_b is overlapped with gene_a, in this case, we only keep gene_a for DMG test
-    #mapped_bam = gene_bed.map(b=gene_bed, c=4, o='distinct', F=0.9)
-    #for _, (*_, gene_a, gene_b_str) in mapped_bam.to_dataframe().iterrows():
-    #    for gene_b in gene_b_str.split(','):
-    #        if gene_b != gene_a:
-    #            genes_to_skip.add(gene_b)
-
-    # remove certain chromosomes
-    #genes_to_skip |= set(gene_meta.index[gene_meta['chrom'].isin(chrom_to_remove)])
-    #use_features = gene_meta.index[~gene_meta.index.isin(genes_to_skip)]
-    #print(f'{use_features.size} features remained')
     open_mcds = MCDS.open(mcds.as_posix(), var_dim="TEs")
-    #this is broken?
-    #open_mcds.add_feature_cov_mean()
-    #open_mcds["TEs_cov_mean"] = feature_cov_mean
-    open_mcds = open_mcds.set_coords("TEs_cov_mean")
-    #print(f"{use_features.size} features remained")
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         cgn = open_mcds["TEs_da"].sel(mc_type="CGN")
