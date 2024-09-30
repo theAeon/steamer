@@ -53,8 +53,6 @@ workflow run_full {
   output {
     File mtx_ch = calculate_fractions.count_mat_ch
     File mtx_cg = calculate_fractions.count_mat_cg
-    File methyl_tar = calculate_fractions.count_tar
-
   }
 }
 
@@ -128,13 +126,11 @@ task calculate_fractions {
     }
     command <<<
     tar -xf ~{tempzarr}; \
-    run_steamer mc-fractions ~{SampleName}.mcds ~{threshold}; \
-    tar -cf fracZarr.tar TEs_frac.mcds
+    run_steamer mc-fractions ~{SampleName}.mcds ~{threshold}
     >>>
     output {
         File count_mat_ch = SampleName + ".mcds.ch.mtx"
         File count_mat_cg = SampleName + ".mcds.cg.mtx"
-        File count_tar    = "fracZarr.tar"
     }
     runtime {
         docker: "quay.io/welch-lab/steamer:latest"
