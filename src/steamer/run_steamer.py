@@ -10,6 +10,7 @@ import typer
 from typing_extensions import Annotated
 
 from ALLCools.mcds import MCDS
+import warnings
 import pandas as pd
 import sparse
 from fuc import pybed
@@ -333,27 +334,24 @@ def mc_fractions(mcds: Path, threshold: int):
     open_mcds = MCDS.open(mcds.as_posix(), var_dim="TEs")
     #this is broken?
     #open_mcds.add_feature_cov_mean()
-    feature_cov_mean = open_mcds["TEs_da"].sel(count_type="cov").sum(dim="mc_type").mean(dim="cell").squeeze().to_pandas()
-    open_mcds["TEs_cov_mean"] = feature_cov_mean
+    #open_mcds["TEs_cov_mean"] = feature_cov_mean
     open_mcds = open_mcds.set_coords("TEs_cov_mean")
-    #use_features = use_features.intersection(feature_cov_mean[feature_cov_mean > threshold].index)
     #print(f"{use_features.size} features remained")
-    open_mcds.filter_feature_by_cov_mean(min_cov=threshold)
-    open_mcds.add_mc_frac(normalize_per_cell=True, clip_norm_value=10)
-    open_mcds = open_mcds[['TEs_da_frac']]
-    open_mcds['TEs_da_frac'] = open_mcds['TEs_da_frac'].astype('float32')
-    open_mcds.write_dataset("TEs_frac.mcds")
-    #squeeze_mcds = da.squeeze(open_mcds)
-    #mask_mcds = da.ma.masked_less(squeeze_mcds[:, :, 1], threshold)
-    #mask3d_mcds = da.stack([mask_mcds, mask_mcds], 2)
-    #apply_mask = da.ma.masked_array(squeeze_mcds, mask=da.logical_not(mask3d_mcds))
-    #divide_mcds = da.apply_along_axis(np.divide.reduce, 2, apply_mask)
-    #nn_mcds = da.nan_to_num(divide_mcds)
-    spMCDSCH = open_mcds["TEs_da_frac"].sel(mc_type="CHN").data.map_blocks(sparse.COO)
-    spMCDSCG = open_mcds["TEs_da_frac"].sel(mc_type="CGN").data.map_blocks(sparse.COO)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        cgn = open_mcds["TEs_da"].sel(mc_type="CGN")
+        chn = open_mcds["TEs_da"].sel(mc_type="CHN")
+        cgnf = cgn.where(cgn.sel(count_type="mc") > threshold)
+        chnf = chn.where(chn.sel(count_type="mc") > threshold)
 
-    mmwrite(mcds.as_posix() + ".ch.mtx", coo_matrix(spMCDSCH.compute().to_scipy_sparse()))
-    mmwrite(mcds.as_posix() + ".cg.mtx", coo_matrix(spMCDSCG.compute().to_scipy_sparse()))
+
+        # here we expected to see a true_divide warning due to cov=0
+        raw_frac_g = cgnf.sel(count_type="mc") / cgnf.sel(count_type="cov").fillna(0)
+        raw_frac_h = chnf.sel(count_type="mc") / chnf.sel(count_type="cov").fillna(0)
+        spCH = raw_frac_h.map_blocks(sparse.COO)
+        spCG = raw_frac_g.map_blocks(sparse.COO)
+        mmwrite(mcds.as_posix() + ".ch.mtx", coo_matrix(spCH.compute().to_scipy_sparse()))
+        mmwrite(mcds.as_posix() + ".cg.mtx", coo_matrix(spCG.compute().to_scipy_sparse()))
 
 
 @app.command()
