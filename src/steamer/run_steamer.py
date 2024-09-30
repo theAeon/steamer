@@ -327,8 +327,8 @@ def mc_fractions(mcds: Path, threshold: int):
         # here we expected to see a true_divide warning due to cov=0
         raw_frac_g = cgnf.sel(count_type="mc") / cgnf.sel(count_type="cov").fillna(0)
         raw_frac_h = chnf.sel(count_type="mc") / chnf.sel(count_type="cov").fillna(0)
-        spCH = raw_frac_h.map_blocks(sparse.COO)
-        spCG = raw_frac_g.map_blocks(sparse.COO)
+        spCH = raw_frac_h.data.map_blocks(sparse.COO)
+        spCG = raw_frac_g.data.map_blocks(sparse.COO)
         mmwrite(mcds.as_posix() + ".ch.mtx", coo_matrix(spCH.compute().to_scipy_sparse()))
         mmwrite(mcds.as_posix() + ".cg.mtx", coo_matrix(spCG.compute().to_scipy_sparse()))
 
