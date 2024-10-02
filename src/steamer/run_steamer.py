@@ -117,7 +117,6 @@ def create_bed_for_fragments(filename: Path, quality_barcode_file: Annotated[Pat
                 quality_barcode_file, sep="\t", names=["barcode"]
             )
             quality_barcodes = quality_barcodes_df["barcode"].tolist()
-            print(len(quality_barcodes))
             frag_df = frag_df[frag_df["barcode"].isin(quality_barcodes)]
             frag_bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
             frag_bf_sort = frag_bf.sort()
@@ -325,12 +324,14 @@ def mc_fractions(mcds: Path, threshold: int):
 
 
         # here we expected to see a true_divide warning due to cov=0
-        raw_frac_g = cgnf.sel(count_type="mc") / cgnf.sel(count_type="cov").fillna(0)
-        raw_frac_h = chnf.sel(count_type="mc") / chnf.sel(count_type="cov").fillna(0)
+        raw_frac_g = cgnf.sel(count_type="mc") / cgnf.sel(count_type="cov")
+        raw_frac_h = chnf.sel(count_type="mc") / chnf.sel(count_type="cov")
+        raw_frac_g = raw_frac_g.fillna(0)
+        raw_frac_h = raw_frac_h.fillna(0)
         spCH = raw_frac_h.data.map_blocks(sparse.COO)
         spCG = raw_frac_g.data.map_blocks(sparse.COO)
-        mmwrite(mcds.as_posix() + ".ch.mtx", coo_matrix(spCH.compute().to_scipy_sparse()))
-        mmwrite(mcds.as_posix() + ".cg.mtx", coo_matrix(spCG.compute().to_scipy_sparse()))
+        mmwrite(mcds.as_posix() + ".ch.mtx", coo_matrix(spCH.data.compute().to_scipy_sparse()))
+        mmwrite(mcds.as_posix() + ".cg.mtx", coo_matrix(spCG.data.compute().to_scipy_sparse()))
 
 
 @app.command()
