@@ -52,7 +52,7 @@ natsort==8.4.0
 nbclient==0.10.0
 nbconvert==7.16.4
 nbformat==5.10.4
-ncls==0.0.68
+ncls @ file://localhost/src/ncls-0.0.68-cp312-cp312-linux_x86_64.whl
 networkx==3.3
 ngs-tools==1.8.5
 numba==0.60.0
@@ -60,7 +60,7 @@ numcodecs==0.13.0
 numpy==1.26.4
 numpy-groupies==0.11.2
 packaging==24.1
-pandas==1.5.3
+pandas @ file://localhost/src/pandas-1.5.3-cp312-cp312-linux_x86_64.whl
 pandas-stubs==2.2.2.240807
 pandocfilters==1.5.1
 partd==1.4.2
@@ -75,7 +75,7 @@ pygments==2.18.0
 pynndescent==0.5.13
 pyparsing==3.1.2
 pyranges==0.1.2
-pysam @ git+https://github.com/theAeon/pysam.git@478235b02e866ffcf25e1c365b53e83e502a1bb1
+pysam @ file://localhost/src/pysam-0.22.1-cp312-cp312-linux_x86_64.whl
 python-dateutil==2.9.0.post0
 pytz==2024.1
 pywin32==306; sys_platform == "win32" and platform_python_implementation != "PyPy"
@@ -94,7 +94,7 @@ setuptools==73.0.1
 shellingham==1.5.4
 shortuuid==1.0.13
 six==1.16.0
-sorted-nearest==0.0.39
+sorted-nearest @ file://localhost/src/sorted_nearest-0.0.39-cp312-cp312-linux_x86_64.whl
 soupsieve==2.6
 sparse==0.15.4
 statsmodels==0.14.2
